@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration>
+	<!-- This appender prints information to console -->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.EnhancedPatternLayout">
+			<param name="ConversionPattern" value="[%d{HH:mm:ss}]%5p %m%n" />
+		</layout>
+	</appender>
+	<appender name="CHAT" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="log/chat.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.EnhancedPatternLayout">
+			<param name="ConversionPattern" value="[%d{dd.MM.yy HH:mm:ss}] %m%n" />
+		</layout>
+	</appender>
+	<appender name="DEBUG" class="org.apache.log4j.FileAppender">
+		<param name="File" value="log/debug.log" />
+		<param name="Append" value="false" />
+		<layout class="org.apache.log4j.EnhancedPatternLayout">
+			<param name="ConversionPattern" value="[%d{dd.MM.yy HH:mm:ss:SSS}] %m%n" />
+		</layout>
+	</appender>
+	<appender name="USERCMD" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="log/usercommands.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.EnhancedPatternLayout">
+			<param name="ConversionPattern" value="[%d{dd.MM.yy HH:mm:ss}] %m%n" />
+		</layout>
+	</appender>
+	<appender name="ADMINCMD" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="log/admincommands.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.EnhancedPatternLayout">
+			<param name="ConversionPattern" value="[%d{dd.MM.yy HH:mm:ss}] %m%n" />
+		</layout>
+	</appender>
+	<appender name="AUTH" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="log/successAuth.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.EnhancedPatternLayout">
+			<param name="ConversionPattern" value="[%d{dd.MM.yy HH:mm:ss}] %m%n" />
+		</layout>
+	</appender>
+	<appender name="FILE" class="org.apache.log4j.FileAppender">
+		<param name="File" value="log/java.log" />
+		<param name="Append" value="false" />
+		<layout class="org.apache.log4j.EnhancedPatternLayout">
+			<param name="ConversionPattern" value="[%d{dd.MM.yy HH:mm:ss:SSS}]%5p %c{2}: %m%n" />
+		</layout>
+	</appender>
+	<appender name="FILEASYNC" class="org.apache.log4j.AsyncAppender">
+		<param name="Blocking" value="false" />
+		<appender-ref ref="FILE" />
+	</appender>
+	<appender name="CHATASYNC" class="org.apache.log4j.AsyncAppender">
+		<param name="Blocking" value="false" />
+		<param name="BufferSize" value="256" />
+		<appender-ref ref="CHAT" />
+	</appender>
+	<appender name="DEBUGASYNC" class="org.apache.log4j.AsyncAppender">
+		<param name="Blocking" value="false" />
+		<param name="BufferSize" value="256" />
+		<appender-ref ref="DEBUG" />
+	</appender>
+	<appender name="USERCMDSYNC" class="org.apache.log4j.AsyncAppender">
+		<param name="Blocking" value="false" />
+		<param name="BufferSize" value="256" />
+		<appender-ref ref="USERCMD" />
+	</appender>
+	<appender name="ADMINCMDSYNC" class="org.apache.log4j.AsyncAppender">
+		<param name="Blocking" value="false" />
+		<param name="BufferSize" value="256" />
+		<appender-ref ref="ADMINCMD" />
+	</appender>
+	<appender name="AUTHSYNC" class="org.apache.log4j.AsyncAppender">
+		<param name="Blocking" value="false" />
+		<param name="BufferSize" value="256" />
+		<appender-ref ref="AUTH" />
+	</appender>
+	<logger name="chat" additivity="false">
+		<appender-ref ref="CHATASYNC" />
+	</logger>
+	<logger name="debug" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="DEBUGASYNC" />
+	</logger>
+	<logger name="usercommand" additivity="false">
+		<appender-ref ref="USERCMDSYNC" />
+	</logger>
+	<logger name="admincommand" additivity="false">
+		<appender-ref ref="ADMINCMDSYNC" />
+	</logger>
+	<logger name="auth" additivity="false">
+		<appender-ref ref="AUTHSYNC" />
+	</logger>
+	<!-- Root Logger -->
+	<root>
+		<level value="info" />
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILEASYNC" />
+	</root>
+</log4j:configuration>
