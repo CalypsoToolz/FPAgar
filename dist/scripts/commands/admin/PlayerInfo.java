@@ -7,7 +7,7 @@ import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.handler.commands.admin.AdminCommandHandler;
 import ru.calypso.ogar.server.handler.commands.admin.IAdminCommandHandler;
 import ru.calypso.ogar.server.util.listeners.OnInitScriptListener;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * @autor Calypso - Freya Project team
@@ -22,14 +22,14 @@ public class PlayerInfo implements IAdminCommandHandler, OnInitScriptListener
 	}
 
 	@Override
-	public boolean useAdminCommand(String command, PlayerImpl player, String args) {
+	public boolean useAdminCommand(String command, Player player, String args) {
 		StringTokenizer st = new StringTokenizer(args);
 		try{
-			List<PlayerImpl> targets = OgarServer.getInstance().getPlayerList().getPlayersByPartName(st.nextToken());
+			List<Player> targets = OgarServer.getInstance().getPlayerList().getPlayersByPartName(st.nextToken());
 			if(!targets.isEmpty())
 			{
 				int i = 1;
-				for(PlayerImpl target : targets)
+				for(Player target : targets)
 					player.sendMessage(i + ") " + target.getName() + ", IP: " + target.getIpAddress() + ", Масса: " + target.getTotalMass());
 			}
 			else

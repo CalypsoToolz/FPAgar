@@ -2,11 +2,11 @@ package ru.calypso.ogar.server.util.move;
 
 import org.apache.log4j.Logger;
 
-import ru.calypso.ogar.api.entity.EntityType;
-import ru.calypso.ogar.api.world.Position;
 import ru.calypso.ogar.server.OgarServer;
-import ru.calypso.ogar.server.entity.EntityImpl;
+import ru.calypso.ogar.server.entity.Entity;
+import ru.calypso.ogar.server.entity.EntityType;
 import ru.calypso.ogar.server.util.MathHelper;
+import ru.calypso.ogar.server.util.Position;
 import ru.calypso.ogar.server.util.PositionFixed;
 
 /**
@@ -18,13 +18,13 @@ public class CustomMoveEngine
 {
 	private static final Logger _log = Logger.getLogger(CustomMoveEngine.class);
 
-	EntityImpl entity;
+	Entity entity;
 	double speed;
 	double angle;
 	double speedDecayRate = 0.75;
 	int ticks, ticksForSleep;
 
-	public CustomMoveEngine(EntityImpl entity, double angle, double speed, double speedDecayRate, int ticks)
+	public CustomMoveEngine(Entity entity, double angle, double speed, double speedDecayRate, int ticks)
 	{
 		this.entity = entity;
 		this.angle = angle;
@@ -137,7 +137,7 @@ public class CustomMoveEngine
 		}
 	}
 
-	public boolean simpleCollide(double x1, double y1, EntityImpl other, double d)
+	public boolean simpleCollide(double x1, double y1, Entity other, double d)
 	{
         return MathHelper.fastAbs(x1 - other.getX()) < (2 * d) && MathHelper.fastAbs(y1 - other.getY()) < (2 * d);
 	}

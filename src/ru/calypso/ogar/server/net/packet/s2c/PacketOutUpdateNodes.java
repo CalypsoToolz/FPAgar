@@ -16,14 +16,14 @@
  */
 package ru.calypso.ogar.server.net.packet.s2c;
 
+import java.util.Collection;
+
 import io.netty.buffer.ByteBuf;
-import ru.calypso.ogar.server.entity.EntityImpl;
+import ru.calypso.ogar.server.entity.Entity;
 import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
 import ru.calypso.ogar.server.net.packet.Packet;
 import ru.calypso.ogar.server.net.throwable.WrongDirectionException;
-import ru.calypso.ogar.server.world.WorldImpl;
-
-import java.util.Collection;
+import ru.calypso.ogar.server.world.World;
 
 
 /**
@@ -32,12 +32,12 @@ import java.util.Collection;
 
 public class PacketOutUpdateNodes extends Packet {
 
-    private final WorldImpl world;
-    private final Collection<EntityImpl> removals;
-    private final Collection<EntityImpl> removalsByEating;
+    private final World world;
+    private final Collection<Entity> removals;
+    private final Collection<Entity> removalsByEating;
     private final Collection<Integer> updates;
 
-    public PacketOutUpdateNodes(WorldImpl world, Collection<EntityImpl> removals, Collection<EntityImpl> removalsByEating, Collection<Integer> updates) {
+    public PacketOutUpdateNodes(World world, Collection<Entity> removals, Collection<Entity> removalsByEating, Collection<Integer> updates) {
         this.world = world;
         this.removals = removals;
         this.removalsByEating = removalsByEating;
@@ -49,21 +49,18 @@ public class PacketOutUpdateNodes extends Packet {
     **/
     @Override
     public void writeData(ByteBuf buf) {
-        // Removals by eating
-        buf.writeShort(removalsByEating.size());
-        for (EntityImpl entity : removalsByEating) {
-        	// TODO mb remove
+
+    	buf.writeShort(removalsByEating.size());
+        for (Entity entity : removalsByEating) {
         	if(entity == null)
         		continue;
-        	//System.out.println("removalsByEating send: " + entity.getType() + ", c: " + entity.getConsumer() + ", id: " + entity.getID());
             buf.writeInt(entity.getConsumer());
             buf.writeInt(entity.getID());
         }
 
-        // Updates
         for (int id : updates) {
         	
-            EntityImpl entity = world.getEntity(id);
+            Entity entity = world.getEntity(id);
             if (entity == null) {
             	continue;
             }
@@ -75,9 +72,8 @@ public class PacketOutUpdateNodes extends Packet {
             buf.writeByte(entity.getColor().getRed());
             buf.writeByte(entity.getColor().getGreen());
             buf.writeByte(entity.getColor().getBlue());
-            //buf.writeBoolean(entity.isSpiked());
             buf.writeByte(entity.isSpiked() ? 1 : 0);
-            //buf.skipBytes(18);
+
             if (entity instanceof CellEntityImpl) {
                 CellEntityImpl cell = (CellEntityImpl) entity;
                 if (cell.getName() == null) {
@@ -91,16 +87,11 @@ public class PacketOutUpdateNodes extends Packet {
         }
         buf.writeInt(0);
 
-        // General removals
         buf.writeInt(removals.size());
-        for (EntityImpl entity : removals) {
+        for (Entity entity : removals) {
         	if(entity != null)
         		buf.writeInt(entity.getID());
-        }
-        //for (EntityImpl entity : removals) {
-        	//System.out.println("removals send: " + entity.getType());
-       //     buf.writeInt(entity.getID());
-      //  }   
+        } 
     }
 
     @Override

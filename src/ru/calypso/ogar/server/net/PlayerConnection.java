@@ -50,9 +50,8 @@ import ru.calypso.ogar.server.net.packet.c2s.PacketInSplit;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutWorldBorder;
 import ru.calypso.ogar.server.net.packet.universal.PacketChat;
 import ru.calypso.ogar.server.net.throwable.UnhandledPacketException;
-import ru.calypso.ogar.server.util.BanList;
 import ru.calypso.ogar.server.util.Log;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * @autor OgarProject, modify by Calypso - Freya Project team
@@ -62,7 +61,7 @@ import ru.calypso.ogar.server.world.PlayerImpl;
 public class PlayerConnection {
 	private static Logger _log = Logger.getLogger(PlayerConnection.class);
 
-    private final PlayerImpl player;
+    private final Player player;
     private final Channel channel;
     private MousePosition globalMousePosition;
     private ConnectionState state = ConnectionState.AUTHENTICATE;
@@ -70,7 +69,7 @@ public class PlayerConnection {
     private int attemptsAuth;
     private String authToken;
 
-    public PlayerConnection(PlayerImpl player, Channel channel) {
+    public PlayerConnection(Player player, Channel channel) {
         this.player = player;
         this.channel = channel;
     }

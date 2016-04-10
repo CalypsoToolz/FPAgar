@@ -23,7 +23,7 @@ import ru.calypso.ogar.server.config.Config;
 import ru.calypso.ogar.server.events.PlayerEventHandler;
 import ru.calypso.ogar.server.events.player.PlayerDisconnectEvent;
 import ru.calypso.ogar.server.net.packet.Packet;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 import org.apache.log4j.Logger;
 
@@ -35,7 +35,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Packet> {
 
 	private static Logger _log = Logger.getLogger(ClientHandler.class);
     private final OgarServer server;
-    private PlayerImpl player;
+    private Player player;
 
     public ClientHandler(OgarServer server) {
         this.server = server;
@@ -49,7 +49,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Packet> {
     		_log.info("Client disconnected by server, reason: no free slots! IP: " + ctx.channel().remoteAddress());
     		return;
     	}
-        this.player = new PlayerImpl(ctx.channel());
+        this.player = new Player(ctx.channel());
         server.getPlayerList().addPlayer(player);
 		_log.info("Client connected! IP: " + ctx.channel().remoteAddress());
     }

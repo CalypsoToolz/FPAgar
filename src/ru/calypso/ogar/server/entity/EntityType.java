@@ -14,27 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Ogar.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.calypso.ogar.api.world;
+package ru.calypso.ogar.server.entity;
 
-import java.util.Collection;
+/**
+ * An enumeration of all recognized entity types.
+ */
+public enum EntityType {
 
-import ru.calypso.ogar.api.Server;
-import ru.calypso.ogar.api.entity.Entity;
-import ru.calypso.ogar.api.entity.EntityType;
-
-public interface World {
-
-    public Server getServer();
-
-    public Entity spawnEntity(EntityType type);
-
-    public Entity spawnEntity(EntityType type, Position position);
-
-    public void removeEntity(Entity entity);
-
-    public void removeEntity(int id);
-
-    public Entity getEntity(int id);
-
-    public Collection<Entity> getEntities();
+    CELL, FOOD, VIRUS, MASS;
 }

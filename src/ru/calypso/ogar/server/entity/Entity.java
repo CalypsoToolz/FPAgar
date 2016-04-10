@@ -20,29 +20,27 @@ import java.awt.Color;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import ru.calypso.ogar.api.entity.Entity;
-import ru.calypso.ogar.api.entity.EntityType;
-import ru.calypso.ogar.api.world.Position;
 import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
 import ru.calypso.ogar.server.entity.impl.FoodEntityImpl;
 import ru.calypso.ogar.server.entity.impl.MassEntityImpl;
 import ru.calypso.ogar.server.entity.impl.VirusEntityImpl;
 import ru.calypso.ogar.server.tick.Tickable;
+import ru.calypso.ogar.server.util.Position;
 import ru.calypso.ogar.server.util.move.CustomMoveEngine;
-import ru.calypso.ogar.server.world.PlayerImpl;
-import ru.calypso.ogar.server.world.WorldImpl;
+import ru.calypso.ogar.server.world.Player;
+import ru.calypso.ogar.server.world.World;
 
 /**
  * @autor OgarProject, done by Calypso - Freya Project team
  */
 
-public abstract class EntityImpl implements Entity, Tickable {
+public abstract class Entity implements Tickable {
 
     private static final AtomicInteger nextEntityId = new AtomicInteger(1);
     protected final int id;
     protected final EntityType type;
-    protected final WorldImpl world;
+    protected final World world;
     protected Position position;
     protected CustomMoveEngine moveEngine;
     protected Color color = Color.GREEN;
@@ -52,19 +50,17 @@ public abstract class EntityImpl implements Entity, Tickable {
     protected boolean markAsEated = false;
     protected int collisionRestoreTicks = 0;
 
-    public EntityImpl(EntityType type, WorldImpl world, Position position) {
+    public Entity(EntityType type, World world, Position position) {
         this.id = nextEntityId.getAndIncrement();
         this.type = type;
         this.world = world;
         this.position = position;
     }
 
-    @Override
     public int getID() {
         return id;
     }
 
-    @Override
     public EntityType getType() {
         return type;
     }
@@ -94,12 +90,10 @@ public abstract class EntityImpl implements Entity, Tickable {
     	return collisionRestoreTicks;
     }
 
-    @Override
     public Position getPosition() {
         return position;
     }
 
-    @Override
     public void setPosition(Position position) {
         this.position = position;
     }
@@ -158,7 +152,7 @@ public abstract class EntityImpl implements Entity, Tickable {
 
     public void prepareRemoveByEathing()
     {
-    	for(PlayerImpl pl : world.getServer().getPlayerList().getAllPlayers())
+    	for(Player pl : world.getServer().getPlayerList().getAllPlayers())
         {
         	if(pl.getTracker().getVisibleEntities().contains(getID()) || (this.getType() == EntityType.CELL && ((CellEntityImpl)this).getOwner() == pl))
         	{
@@ -177,47 +171,39 @@ public abstract class EntityImpl implements Entity, Tickable {
        //         .forEach((t) -> t.removeByEating(this));
     }
  
-    @Override
     public Color getColor() {
         return color;
     }
 
-    @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
-    @Override
     public int getPhysicalSize() {
         return (int) Math.ceil(Math.sqrt(100 * mass));
     }
 
-    @Override
     public int getMass() {
         return mass;
     }
 
-    @Override
     public void setMass(int mass) {
         this.mass = mass;
     }
 
-    @Override
     public void addMass(int mass) {
         this.mass += mass;
     }
 
-    @Override
     public boolean isSpiked() {
         return spiked;
     }
 
-    @Override
     public void setSpiked(boolean spiked) {
         this.spiked = spiked;
     }
 
-    public WorldImpl getWorld() {
+    public World getWorld() {
         return world;
     }
 
@@ -258,7 +244,24 @@ public abstract class EntityImpl implements Entity, Tickable {
      */
     public abstract void tick();
 
-    public void onRemove() {}
+    public void onRemove()
+    {
+    	switch(getType())
+    	{
+	        case FOOD:
+	        	getWorld().getServer().getFoodList().removeFood((FoodEntityImpl)this);
+	            break;
+	        case MASS:
+	        	getWorld().getServer().getMassList().removeMass((MassEntityImpl)this);
+	            break;
+	        case VIRUS:
+	        	getWorld().getServer().getVirusList().removeVirus((VirusEntityImpl)this);
+	            break;
+	        default:
+	        	// none
+	        	break;
+    	}
+    }
 
     @Override
     public int hashCode() {
@@ -276,7 +279,7 @@ public abstract class EntityImpl implements Entity, Tickable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final EntityImpl other = (EntityImpl) obj;
+        final Entity other = (Entity) obj;
         if (this.id != other.id) {
             return false;
         }

@@ -16,19 +16,19 @@
  */
 package ru.calypso.ogar.server.events.player;
 
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 public class PlayerNameChangeEvent extends IEvent{
 
-    private final PlayerImpl player;
+    private final Player player;
     private String name;
 
-    public PlayerNameChangeEvent(PlayerImpl player, String name) {
+    public PlayerNameChangeEvent(Player player, String name) {
         this.player = player;
         this.name = name;
     }
 
-    public PlayerImpl getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import io.netty.buffer.ByteBuf;
 import ru.calypso.ogar.server.net.packet.Packet;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * @autor Calypso - Freya Project team
@@ -14,7 +14,7 @@ public class PacketChat extends Packet
 {
 	public String message;
 	public String chatname = "SERVER";
-	public PlayerImpl player;
+	public Player player;
 	public Color color = Color.RED;
 
 	// TODO notused
@@ -26,7 +26,7 @@ public class PacketChat extends Packet
 	 * @param sender - игрок
 	 * @param message - сообщение
 	 */
-	public PacketChat(PlayerImpl sender, String message)
+	public PacketChat(Player sender, String message)
 	{
 		this.message = message;
 		player = sender;

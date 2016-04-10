@@ -31,7 +31,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import com.google.common.collect.ImmutableList;
 
 import io.netty.channel.Channel;
-import ru.calypso.ogar.api.Player;
 import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
 import ru.calypso.ogar.server.net.PlayerConnection;
 import ru.calypso.ogar.server.net.packet.Packet;
@@ -44,7 +43,7 @@ import ru.calypso.ogar.server.util.Language;
  * @autor OgarProject, modify by Calypso - Freya Project team
  */
 
-public class PlayerImpl implements Player {
+public class Player {
 
     private final PlayerConnection playerConnection;
     private final Set<CellEntityImpl> cells = new HashSet<>();
@@ -57,7 +56,7 @@ public class PlayerImpl implements Player {
     private boolean isAdmin, isModerator;
     private Language lang = Language.RUSSIAN;
 
-    public PlayerImpl(Channel channel) {
+    public Player(Channel channel) {
         this.playerConnection = new PlayerConnection(this, channel);
         this.tracker = new PlayerTracker(this);
     }
@@ -199,12 +198,10 @@ public class PlayerImpl implements Player {
         return totalMass;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -263,7 +260,7 @@ public class PlayerImpl implements Player {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PlayerImpl other = (PlayerImpl) obj;
+        final Player other = (Player) obj;
         if (!Objects.equals(this.playerConnection, other.playerConnection)) {
             return false;
         }

@@ -17,15 +17,15 @@
 package ru.calypso.ogar.server.tick;
 
 import ru.calypso.ogar.server.net.packet.Packet;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 public class TickablePacketSend implements Tickable {
 
-    private final PlayerImpl player;
+    private final Player player;
     private final Packet packet;
     private boolean sent = false;
 
-    public TickablePacketSend(PlayerImpl player, Packet packet) {
+    public TickablePacketSend(Player player, Packet packet) {
         this.player = player;
         this.packet = packet;
     }

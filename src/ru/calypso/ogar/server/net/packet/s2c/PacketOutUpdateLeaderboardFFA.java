@@ -25,7 +25,7 @@ import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.config.Config;
 import ru.calypso.ogar.server.net.packet.Packet;
 import ru.calypso.ogar.server.net.throwable.WrongDirectionException;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * @autor Calypso - Freya Project team
@@ -33,7 +33,7 @@ import ru.calypso.ogar.server.world.PlayerImpl;
 
 public class PacketOutUpdateLeaderboardFFA extends Packet {
 
-	private List<PlayerImpl> allParticates = new ArrayList<PlayerImpl>();
+	private List<Player> allParticates = new ArrayList<Player>();
     private final OgarServer server;
 
     public PacketOutUpdateLeaderboardFFA(OgarServer server) {
@@ -67,7 +67,7 @@ public class PacketOutUpdateLeaderboardFFA extends Packet {
 
     private void prepare()
 	{
-		for(PlayerImpl player : server.getPlayerList().getAllPlayers())
+		for(Player player : server.getPlayerList().getAllPlayers())
 		{
 			if(player.getCells().isEmpty())
 				continue;
@@ -76,7 +76,7 @@ public class PacketOutUpdateLeaderboardFFA extends Packet {
 		allParticates.sort(PLAYER_COMPARATOR);
 	}
 
-	public static final Comparator<PlayerImpl> PLAYER_COMPARATOR = (o1, o2) -> {
+	public static final Comparator<Player> PLAYER_COMPARATOR = (o1, o2) -> {
 		if(o1.getTotalMass() > o2.getTotalMass())
 			return -1;
 		if(o1.getTotalMass() < o2.getTotalMass())

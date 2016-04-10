@@ -27,13 +27,15 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 
-import ru.calypso.ogar.api.Ogar;
-import ru.calypso.ogar.api.Server;
 import ru.calypso.ogar.server.config.Config;
-import ru.calypso.ogar.server.entity.EntityImpl;
+import ru.calypso.ogar.server.entity.Entity;
 import ru.calypso.ogar.server.events.PlayerEventHandler;
 import ru.calypso.ogar.server.handler.commands.admin.AdminCommandHandler;
 import ru.calypso.ogar.server.handler.commands.user.UserCommandHandler;
+import ru.calypso.ogar.server.holders.FoodList;
+import ru.calypso.ogar.server.holders.MassList;
+import ru.calypso.ogar.server.holders.PlayerList;
+import ru.calypso.ogar.server.holders.VirusList;
 import ru.calypso.ogar.server.net.NetworkManager;
 import ru.calypso.ogar.server.tasks.FoodSpawnTask;
 import ru.calypso.ogar.server.tasks.LeaderBoardSendTask;
@@ -48,14 +50,14 @@ import ru.calypso.ogar.server.util.StatsUtils;
 import ru.calypso.ogar.server.util.listeners.ConsoleListener;
 import ru.calypso.ogar.server.util.threads.RunnableImpl;
 import ru.calypso.ogar.server.util.threads.ThreadPoolManager;
-import ru.calypso.ogar.server.world.PlayerImpl;
-import ru.calypso.ogar.server.world.WorldImpl;
+import ru.calypso.ogar.server.world.Player;
+import ru.calypso.ogar.server.world.World;
 
 /**
  * @autor OgarProject, modify by Calypso - Freya Project team
  */
 
-public class OgarServer implements Server {
+public class OgarServer {
 
     private static OgarServer instance;
 	private static Logger _log = Logger.getLogger(OgarServer.class);
@@ -66,7 +68,7 @@ public class OgarServer implements Server {
     private final Set<TickWorker> tickWorkers = new HashSet<>();
     private int tickThreads = Integer.getInteger("tickThreads", 1); // TODO learn about this
     private NetworkManager networkManager;
-    private WorldImpl world;
+    private World world;
     private long tick = 0, startTime;
 
     public static void main(String[] args) throws Throwable {
@@ -97,8 +99,7 @@ public class OgarServer implements Server {
     	return virusList;
     }
 
-    @Override
-    public WorldImpl getWorld() {
+    public World getWorld() {
         return world;
     }
 
@@ -108,7 +109,6 @@ public class OgarServer implements Server {
 
     private void run() {
     	startTime = System.currentTimeMillis();
-        Ogar.setServer(this);
         ThreadPoolManager.getInstance();
 		Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
 		
@@ -139,7 +139,7 @@ public class OgarServer implements Server {
 		_log.info("=================================================");
         // проверяем порт на доступность, если занят, то ждем пока не освободится
         checkPort();
-        world = new WorldImpl(this);
+        world = new World(this);
         
         _log.info("=[Scripts]=======================================");
         ScriptsLoader.getInstance().init();
@@ -220,12 +220,12 @@ public class OgarServer implements Server {
                 tick++;
 
                 // Entity ticking
-                for (Iterator<EntityImpl> it = world.getRawEntities().iterator(); it.hasNext();) {
+                for (Iterator<Entity> it = world.getRawEntities().iterator(); it.hasNext();) {
                 	tick(it.next());
                 }
 
                 // Update nodes
-                for (Iterator<PlayerImpl> it = playerList.getAllPlayers().iterator(); it.hasNext();) {
+                for (Iterator<Player> it = playerList.getAllPlayers().iterator(); it.hasNext();) {
                 	tick(it.next().getTracker()::updateNodes);
                 }
                                 
@@ -375,7 +375,7 @@ public class OgarServer implements Server {
 			case "kick":
 				try
 				{
-					PlayerImpl player = getPlayerList().getPlayerByName(st.nextToken());
+					Player player = getPlayerList().getPlayerByName(st.nextToken());
 					if(player != null)
 					{
 						player.getConnection().getChannel().disconnect();

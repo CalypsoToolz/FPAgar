@@ -1,6 +1,6 @@
 package ru.calypso.ogar.server.handler.commands.user;
 
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * @autor Calypso - Freya Project team
@@ -8,7 +8,7 @@ import ru.calypso.ogar.server.world.PlayerImpl;
 
 public interface IUserCommandHandler
 {
-	public boolean useUserCommand(String command, PlayerImpl player, String args);
+	public boolean useUserCommand(String command, Player player, String args);
 
 	public String[] getUserCommandList();
 }

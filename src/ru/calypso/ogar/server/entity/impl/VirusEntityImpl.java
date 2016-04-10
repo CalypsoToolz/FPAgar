@@ -20,25 +20,23 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.calypso.ogar.api.entity.EntityType;
-import ru.calypso.ogar.api.world.Position;
 import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.config.Config;
-import ru.calypso.ogar.server.entity.EntityImpl;
+import ru.calypso.ogar.server.entity.Entity;
+import ru.calypso.ogar.server.entity.EntityType;
+import ru.calypso.ogar.server.util.Position;
 import ru.calypso.ogar.server.util.move.CustomMoveEngine;
-import ru.calypso.ogar.server.util.threads.RunnableImpl;
-import ru.calypso.ogar.server.util.threads.ThreadPoolManager;
-import ru.calypso.ogar.server.world.WorldImpl;
+import ru.calypso.ogar.server.world.World;
 
 /**
  * @autor Calypso - Freya Project team
  */
 
-public class VirusEntityImpl extends EntityImpl {
+public class VirusEntityImpl extends Entity {
 	private int massConsumed;
 	private double explodeAngle;
 
-    public VirusEntityImpl(WorldImpl world, Position position) {
+    public VirusEntityImpl(World world, Position position) {
         super(EntityType.VIRUS, world, position);
         this.mass = Config.Virus.MASS;
         this.color = Color.GREEN;
@@ -69,9 +67,7 @@ public class VirusEntityImpl extends EntityImpl {
 
     @Override
     public void onRemove()
-    {
-    	getWorld().getServer().getVirusList().removeVirus(this);
-    }
+    {}
 
     public void searchMass()
     {

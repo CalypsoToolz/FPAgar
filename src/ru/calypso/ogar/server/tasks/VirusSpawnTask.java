@@ -1,8 +1,8 @@
 package ru.calypso.ogar.server.tasks;
 
-import ru.calypso.ogar.api.entity.EntityType;
 import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.config.Config;
+import ru.calypso.ogar.server.entity.EntityType;
 import ru.calypso.ogar.server.util.threads.RunnableImpl;
 
 /**

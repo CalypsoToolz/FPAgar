@@ -16,25 +16,23 @@
  */
 package ru.calypso.ogar.server.entity.impl;
 
-import ru.calypso.ogar.api.entity.EntityType;
-import ru.calypso.ogar.api.world.Position;
 import ru.calypso.ogar.server.OgarServer;
-import ru.calypso.ogar.server.entity.EntityImpl;
+import ru.calypso.ogar.server.entity.Entity;
+import ru.calypso.ogar.server.entity.EntityType;
 import ru.calypso.ogar.server.util.MathHelper;
+import ru.calypso.ogar.server.util.Position;
 import ru.calypso.ogar.server.util.PositionFixed;
-import ru.calypso.ogar.server.util.threads.RunnableImpl;
-import ru.calypso.ogar.server.util.threads.ThreadPoolManager;
-import ru.calypso.ogar.server.world.WorldImpl;
+import ru.calypso.ogar.server.world.World;
 
 /**
  * @autor OgarProject, done by Calypso - Freya Project team
  */
 
-public class MassEntityImpl extends EntityImpl {
+public class MassEntityImpl extends Entity {
 	private int cellSpawnerId = 0;
 	private boolean isMove = false;
 	
-    public MassEntityImpl(WorldImpl world, Position position) {
+    public MassEntityImpl(World world, Position position) {
         super(EntityType.MASS, world, position);
     }
 
@@ -102,9 +100,7 @@ public class MassEntityImpl extends EntityImpl {
 
     @Override
     public void onRemove()
-    {
-    	getWorld().getServer().getMassList().removeMass(this);
-    }
+    {}
 
     public void setCellSpawner(int id)
     {

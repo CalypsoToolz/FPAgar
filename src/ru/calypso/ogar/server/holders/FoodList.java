@@ -1,4 +1,4 @@
-package ru.calypso.ogar.server;
+package ru.calypso.ogar.server.holders;
 
 import java.util.Collection;
 import java.util.HashSet;

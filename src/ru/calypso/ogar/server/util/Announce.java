@@ -1,7 +1,7 @@
 package ru.calypso.ogar.server.util;
 
 import ru.calypso.ogar.server.OgarServer;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * @autor Calypso - Freya Project team
@@ -17,7 +17,7 @@ public class Announce {
 	 */
 	public static void sendAnnounce(String from, String message, Language lang)
 	{
-		for(PlayerImpl pl : OgarServer.getInstance().getPlayerList().getAllPlayers())
+		for(Player pl : OgarServer.getInstance().getPlayerList().getAllPlayers())
 			if(pl.getLanguage() == lang)
 				pl.sendMessage(from, message);
 	}
@@ -29,7 +29,7 @@ public class Announce {
 	 */
 	public static void sendAnnounce(String message, Language lang)
 	{
-		for(PlayerImpl pl : OgarServer.getInstance().getPlayerList().getAllPlayers())
+		for(Player pl : OgarServer.getInstance().getPlayerList().getAllPlayers())
 			if(pl.getLanguage() == lang)
 				pl.sendMessage("ANNOUNCE", message);
 	}
@@ -40,7 +40,7 @@ public class Announce {
 	 */
 	public static void sendAnnounceAll(String message)
 	{
-		for(PlayerImpl pl : OgarServer.getInstance().getPlayerList().getAllPlayers())
+		for(Player pl : OgarServer.getInstance().getPlayerList().getAllPlayers())
 			pl.sendMessage("ANNOUNCE", message);
 	}
 
@@ -51,7 +51,7 @@ public class Announce {
 	 */
 	public static void sendAnnounceAll(String from, String message)
 	{
-		for(PlayerImpl pl : OgarServer.getInstance().getPlayerList().getAllPlayers())
+		for(Player pl : OgarServer.getInstance().getPlayerList().getAllPlayers())
 			pl.sendMessage(from, message);
 	}
 }

@@ -20,38 +20,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-import ru.calypso.ogar.api.entity.CellEntity;
-import ru.calypso.ogar.api.entity.EntityType;
-import ru.calypso.ogar.api.world.Position;
 import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.config.Config;
-import ru.calypso.ogar.server.entity.EntityImpl;
+import ru.calypso.ogar.server.entity.Entity;
+import ru.calypso.ogar.server.entity.EntityType;
 import ru.calypso.ogar.server.net.PlayerConnection.MousePosition;
 import ru.calypso.ogar.server.tasks.MassDecayTask;
+import ru.calypso.ogar.server.util.EntityColors.PlayerColor;
 import ru.calypso.ogar.server.util.MathHelper;
+import ru.calypso.ogar.server.util.Position;
 import ru.calypso.ogar.server.util.PositionFixed;
 import ru.calypso.ogar.server.util.Rnd;
-import ru.calypso.ogar.server.util.EntityColors.PlayerColor;
 import ru.calypso.ogar.server.util.move.CustomMoveEngine;
-import ru.calypso.ogar.server.util.threads.RunnableImpl;
 import ru.calypso.ogar.server.util.threads.ThreadPoolManager;
-import ru.calypso.ogar.server.world.PlayerImpl;
-import ru.calypso.ogar.server.world.WorldImpl;
+import ru.calypso.ogar.server.world.Player;
+import ru.calypso.ogar.server.world.World;
 
 /**
  * @autor OgarProject, done by Calypso - Freya Project team
  */
 
-public class CellEntityImpl extends EntityImpl implements CellEntity {
+public class CellEntityImpl extends Entity {
 
-    private final PlayerImpl owner;
+    private final Player owner;
     private String name;
     private long recombineTicks = 0;
     private boolean spacePressed = false;
     private boolean wPressed = false;
     private ScheduledFuture<?> decayTask = null;
 
-    public CellEntityImpl(PlayerImpl owner, WorldImpl world, Position position) {
+    public CellEntityImpl(Player owner, World world, Position position) {
         super(EntityType.CELL, world, position);
         this.owner = owner;
         this.name = owner.getName();
@@ -80,7 +78,7 @@ public class CellEntityImpl extends EntityImpl implements CellEntity {
         this.name = name;
     }
 
-    public PlayerImpl getOwner() {
+    public Player getOwner() {
         return owner;
     }
 
@@ -190,20 +188,15 @@ public class CellEntityImpl extends EntityImpl implements CellEntity {
         double deltaY = mouse.getY() - this.getY();
         double angle = Math.atan2(deltaX, deltaY);
 
-        // новая масса для обеих шаров
         int newMass = this.getMass() / 2;
-        // меняем массу для делимого шара
         this.setMass(newMass);
-        int size = this.getPhysicalSize();
-		//Position startPos = new Position(
-		//		this.getX() + size * Math.sin(angle),
-		//		this.getY() + size * Math.cos(angle));
-        // спауним новый шар
+
         CellEntityImpl newCell = OgarServer.getInstance().getWorld().spawnPlayerCell(owner, this.getPosition());
         newCell.setCustomMoveEngine(new CustomMoveEngine(newCell, angle, 130, 0.85, 32));
+        
         newCell.calcRecombineTicks();
         calcRecombineTicks();
-        // Установим массу
+
         newCell.setMass(newMass);
         newCell.setCollisionRestoreTicks(10 + 4);
         owner.addCell(newCell);
@@ -271,8 +264,8 @@ public class CellEntityImpl extends EntityImpl implements CellEntity {
     }
  
     private void eat() {
-        List<EntityImpl> edibles = getNearbyEntity();        
-        for (EntityImpl entity : edibles) {
+        List<Entity> edibles = getNearbyEntity();        
+        for (Entity entity : edibles) {
             if(entity.getType() == EntityType.CELL)
             	entity.setIsMarkAsEated(true);
             
@@ -293,9 +286,9 @@ public class CellEntityImpl extends EntityImpl implements CellEntity {
         }
     }
 
-    public List<EntityImpl> getNearbyEntity()
+    public List<Entity> getNearbyEntity()
     {
-    	List<EntityImpl> result = new ArrayList<EntityImpl>();
+    	List<Entity> result = new ArrayList<Entity>();
     	
     	int r = getPhysicalSize();
         double topY = getY() - r;
@@ -304,7 +297,7 @@ public class CellEntityImpl extends EntityImpl implements CellEntity {
         double rightX = getX() + r;
 
         for (int otherId : owner.getTracker().getVisibleEntities()) {
-        	EntityImpl check = world.getEntity(otherId);
+        	Entity check = world.getEntity(otherId);
         	if(check == null)
         		continue;
         	

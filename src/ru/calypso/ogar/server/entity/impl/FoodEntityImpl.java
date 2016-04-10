@@ -16,21 +16,21 @@
  */
 package ru.calypso.ogar.server.entity.impl;
 
-import ru.calypso.ogar.api.entity.EntityType;
-import ru.calypso.ogar.api.world.Position;
 import ru.calypso.ogar.server.config.Config;
-import ru.calypso.ogar.server.entity.EntityImpl;
+import ru.calypso.ogar.server.entity.Entity;
+import ru.calypso.ogar.server.entity.EntityType;
 import ru.calypso.ogar.server.util.Rnd;
+import ru.calypso.ogar.server.world.World;
 import ru.calypso.ogar.server.util.EntityColors.FoodColor;
-import ru.calypso.ogar.server.world.WorldImpl;
+import ru.calypso.ogar.server.util.Position;
 
 /**
  * @autor OgarProject, done by Calypso - Freya Project team
  */
 
-public class FoodEntityImpl extends EntityImpl {
+public class FoodEntityImpl extends Entity {
 
-    public FoodEntityImpl(WorldImpl world, Position position) {
+    public FoodEntityImpl(World world, Position position) {
         super(EntityType.FOOD, world, position);
         this.mass = Config.Food.MASS;
         setColor(FoodColor.values()[Rnd.get(0, FoodColor.values().length - 1)].get());
@@ -47,7 +47,5 @@ public class FoodEntityImpl extends EntityImpl {
 
     @Override
     public void onRemove()
-    {
-    	getWorld().getServer().getFoodList().removeFood(this);
-    }
+    {}
 }

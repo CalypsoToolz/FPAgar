@@ -20,17 +20,15 @@ import com.google.common.collect.ImmutableList;
 
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import ru.calypso.ogar.api.entity.Entity;
-import ru.calypso.ogar.api.entity.EntityType;
-import ru.calypso.ogar.api.world.Position;
-import ru.calypso.ogar.api.world.World;
 import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.config.Config;
-import ru.calypso.ogar.server.entity.EntityImpl;
+import ru.calypso.ogar.server.entity.Entity;
+import ru.calypso.ogar.server.entity.EntityType;
 import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
 import ru.calypso.ogar.server.entity.impl.FoodEntityImpl;
 import ru.calypso.ogar.server.entity.impl.MassEntityImpl;
 import ru.calypso.ogar.server.entity.impl.VirusEntityImpl;
+import ru.calypso.ogar.server.util.Position;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,11 +41,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @autor OgarProject, done by Calypso - Freya Project team
  */
 
-public class WorldImpl implements World {
+public class World {
 
     private static final Random random = new Random();
     private final OgarServer server;
-    private final TIntObjectMap<EntityImpl> entities = new TIntObjectHashMap<>();
+    private final TIntObjectMap<Entity> entities = new TIntObjectHashMap<>();
     /** Блокировка для чтения/записи объектов списка */
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	private final Lock readLock = lock.readLock();
@@ -56,34 +54,34 @@ public class WorldImpl implements World {
     private final Border border;
     private final View view;
 
-    public WorldImpl(OgarServer server) {
+    public World(OgarServer server) {
         this.server = server;
         this.border = new Border();
         this.view = new View();
     }
 
-    public EntityImpl spawnEntity(EntityType type) {
+    public Entity spawnEntity(EntityType type) {
         return spawnEntity(type, getRandomPosition());
     }
 
-    public EntityImpl spawnEntity(EntityType type, Position position) {
+    public Entity spawnEntity(EntityType type, Position position) {
         return spawnEntity(type, position, null);
     }
 
-    public CellEntityImpl spawnPlayerCell(PlayerImpl player) {
+    public CellEntityImpl spawnPlayerCell(Player player) {
         return spawnPlayerCell(player, getRandomPosition());
     }
 
-    public CellEntityImpl spawnPlayerCell(PlayerImpl player, Position position) {
+    public CellEntityImpl spawnPlayerCell(Player player, Position position) {
         return (CellEntityImpl) spawnEntity(EntityType.CELL, position, player);
     }
 
-    private EntityImpl spawnEntity(EntityType type, Position position, PlayerImpl owner) {
+    private Entity spawnEntity(EntityType type, Position position, Player owner) {
         if (type == null || position == null) {
             return null;
         }
 
-        EntityImpl entity;
+        Entity entity;
         switch (type) {
             case CELL:
                 if (owner == null) {
@@ -120,12 +118,10 @@ public class WorldImpl implements World {
         return entity;
     }
 
-    @Override
     public void removeEntity(Entity entity) {
         removeEntity(entity.getID());
     }
 
-	@Override
 	public void removeEntity(int id) {
 		readLock.lock();
 		try
@@ -152,8 +148,7 @@ public class WorldImpl implements World {
 		}
 	}
 
-    @Override
-    public EntityImpl getEntity(int id) {
+    public Entity getEntity(int id) {
     	readLock.lock();
 		try
 		{
@@ -165,7 +160,7 @@ public class WorldImpl implements World {
 		}
     }
 
-    public List<EntityImpl> getRawEntities() {
+    public List<Entity> getRawEntities() {
     	readLock.lock();
 		try
 		{
@@ -177,7 +172,6 @@ public class WorldImpl implements World {
 		}
     }
 
-    @Override
     public Collection<Entity> getEntities() {
     	readLock.lock();
 		try
@@ -198,7 +192,6 @@ public class WorldImpl implements World {
         return view;
     }
 
-    @Override
     public OgarServer getServer() {
         return server;
     }

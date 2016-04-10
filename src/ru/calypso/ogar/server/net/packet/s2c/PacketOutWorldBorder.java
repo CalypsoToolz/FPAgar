@@ -19,7 +19,7 @@ package ru.calypso.ogar.server.net.packet.s2c;
 import io.netty.buffer.ByteBuf;
 import ru.calypso.ogar.server.net.packet.Packet;
 import ru.calypso.ogar.server.net.throwable.WrongDirectionException;
-import ru.calypso.ogar.server.world.WorldImpl;
+import ru.calypso.ogar.server.world.World;
 
 public class PacketOutWorldBorder extends Packet {
 
@@ -30,7 +30,7 @@ public class PacketOutWorldBorder extends Packet {
 
     public PacketOutWorldBorder() {}
 
-    public PacketOutWorldBorder(WorldImpl.Border border) {
+    public PacketOutWorldBorder(World.Border border) {
         this.left = border.getLeft();
         this.top = border.getTop();
         this.right = border.getRight();

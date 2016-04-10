@@ -12,7 +12,7 @@ import ru.calypso.ogar.server.events.player.PlayerDisconnectEvent;
 import ru.calypso.ogar.server.net.packet.universal.PacketChat;
 import ru.calypso.ogar.server.util.StatsUtils;
 import ru.calypso.ogar.server.util.listeners.OnInitScriptListener;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * @autor Calypso - Freya Project team
@@ -32,7 +32,7 @@ public class ExampleScript extends IPlayerEventHandler implements OnInitScriptLi
 	@Override
 	public void onConnected(PlayerConnectedEvent event) {
     	_log.info("Player has connected!");
-    	PlayerImpl player = event.getPlayer();
+    	Player player = event.getPlayer();
     	player.sendPacket(new PacketChat("Welcome!", Color.GREEN));
     	player.sendPacket(new PacketChat("This server based on Ogar v2", Color.GREEN));
     	if(Config.Server.AUTORESTART_DELAY > 0)

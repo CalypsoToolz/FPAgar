@@ -6,7 +6,7 @@ import ru.calypso.ogar.server.handler.commands.user.IUserCommandHandler;
 import ru.calypso.ogar.server.handler.commands.user.UserCommandHandler;
 import ru.calypso.ogar.server.util.StatsUtils;
 import ru.calypso.ogar.server.util.listeners.OnInitScriptListener;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * @autor Calypso - Freya Project team
@@ -22,7 +22,7 @@ public class ServerStats implements IUserCommandHandler, OnInitScriptListener
 	}
 
 	@Override
-	public boolean useUserCommand(String command, PlayerImpl player, String args) {
+	public boolean useUserCommand(String command, Player player, String args) {
 		if(command.equals("uptime"))
 		{
 			int diff = (int) (System.currentTimeMillis() - OgarServer.getInstance().getStartTime()) / 1000;

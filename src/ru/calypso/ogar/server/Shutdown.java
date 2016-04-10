@@ -5,7 +5,6 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
-import ru.calypso.ogar.server.net.packet.universal.PacketChat;
 import ru.calypso.ogar.server.util.Announce;
 import ru.calypso.ogar.server.util.Language;
 import ru.calypso.ogar.server.util.StatsUtils;

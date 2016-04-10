@@ -16,17 +16,17 @@
  */
 package ru.calypso.ogar.server.events.player;
 
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 public class PlayerDisconnectEvent extends IEvent{
 
-    private final PlayerImpl player;
+    private final Player player;
 
-    public PlayerDisconnectEvent(PlayerImpl player) {
+    public PlayerDisconnectEvent(Player player) {
         this.player = player;
     }
 
-    public PlayerImpl getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

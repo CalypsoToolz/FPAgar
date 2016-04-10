@@ -8,7 +8,7 @@ import ru.calypso.ogar.server.handler.commands.admin.IAdminCommandHandler;
 import ru.calypso.ogar.server.util.BanList;
 import ru.calypso.ogar.server.util.IpUtils;
 import ru.calypso.ogar.server.util.listeners.OnInitScriptListener;
-import ru.calypso.ogar.server.world.PlayerImpl;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * @autor Calypso - Freya Project team
@@ -23,7 +23,7 @@ public class Ban implements IAdminCommandHandler, OnInitScriptListener
 	}
 
 	@Override
-	public boolean useAdminCommand(String command, PlayerImpl player, String args) {
+	public boolean useAdminCommand(String command, Player player, String args) {
 		StringTokenizer st = new StringTokenizer(args);
 		if(command.equals("ban"))
 		{
@@ -41,7 +41,7 @@ public class Ban implements IAdminCommandHandler, OnInitScriptListener
 				}
 				
 				BanList.addIP(ip);
-				for(PlayerImpl target : OgarServer.getInstance().getPlayerList().getPlayersByIP(ip))
+				for(Player target : OgarServer.getInstance().getPlayerList().getPlayersByIP(ip))
 					target.getConnection().getChannel().close();
 				player.sendMessage("IP " + ip + " успешно забанен!");
 			}

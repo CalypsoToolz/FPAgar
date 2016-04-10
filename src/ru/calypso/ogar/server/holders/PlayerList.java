@@ -14,13 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Ogar.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.calypso.ogar.server;
-
-import com.google.common.collect.ImmutableSet;
-
-import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
-import ru.calypso.ogar.server.net.packet.Packet;
-import ru.calypso.ogar.server.world.PlayerImpl;
+package ru.calypso.ogar.server.holders;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +23,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+
+import ru.calypso.ogar.server.OgarServer;
+import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
+import ru.calypso.ogar.server.net.packet.Packet;
+import ru.calypso.ogar.server.world.Player;
+
 /**
  * @autor OgarProject, modify by Calypso - Freya Project team
  */
@@ -36,31 +37,31 @@ import java.util.Set;
 public class PlayerList {
 
     private final OgarServer server;
-    private final Set<PlayerImpl> players = new HashSet<>();
+    private final Set<Player> players = new HashSet<>();
 
     public PlayerList(OgarServer server) {
         this.server = server;
     }
 
-    public Collection<PlayerImpl> getAllPlayers() {
+    public Collection<Player> getAllPlayers() {
         return players;
     }
 
-    public Collection<PlayerImpl> getPlayersWithCells() {
-    	Set<PlayerImpl> result = new HashSet<>();
-    	for (Iterator<PlayerImpl> it = players.iterator(); it.hasNext();) {
-			PlayerImpl pl = it.next();
+    public Collection<Player> getPlayersWithCells() {
+    	Set<Player> result = new HashSet<>();
+    	for (Iterator<Player> it = players.iterator(); it.hasNext();) {
+			Player pl = it.next();
 			if(!pl.getCells().isEmpty())
 				result.add(pl);
     	}
     	return result;
     }
 
-    public void addPlayer(PlayerImpl player) {
+    public void addPlayer(Player player) {
         players.add(player);
     }
 
-    public void removePlayer(PlayerImpl player) {
+    public void removePlayer(Player player) {
         players.remove(player);
         if (player != null && player.getCells().size() > 0) {
         	for (Iterator<CellEntityImpl> it = player.getCells().iterator(); it.hasNext();) {
@@ -71,41 +72,41 @@ public class PlayerList {
         }
     }
 
-    public PlayerImpl getPlayerByName(String name)
+    public Player getPlayerByName(String name)
     {
-    	for (Iterator<PlayerImpl> it = players.iterator(); it.hasNext();) {
-    		PlayerImpl player = it.next();
+    	for (Iterator<Player> it = players.iterator(); it.hasNext();) {
+    		Player player = it.next();
     		if(player != null && player.getName().equalsIgnoreCase(name))
     			return player;
     	}
     	return null;
     }
 
-    public List<PlayerImpl> getPlayersByPartName(String partOfName)
+    public List<Player> getPlayersByPartName(String partOfName)
     {
-    	List<PlayerImpl> result = new ArrayList<PlayerImpl>();
-    	for (Iterator<PlayerImpl> it = players.iterator(); it.hasNext();) {
-    		PlayerImpl player = it.next();
+    	List<Player> result = new ArrayList<Player>();
+    	for (Iterator<Player> it = players.iterator(); it.hasNext();) {
+    		Player player = it.next();
     		if(player != null && player.getName().toLowerCase().indexOf(partOfName.toLowerCase()) != -1)
     			result.add(player);
     	}
     	return result;
     }
 
-    public List<PlayerImpl> getPlayersByIP(String ip)
+    public List<Player> getPlayersByIP(String ip)
     {
-    	List<PlayerImpl> result = new ArrayList<PlayerImpl>();
-    	for (Iterator<PlayerImpl> it = players.iterator(); it.hasNext();) {
-    		PlayerImpl player = it.next();
+    	List<Player> result = new ArrayList<Player>();
+    	for (Iterator<Player> it = players.iterator(); it.hasNext();) {
+    		Player player = it.next();
     		if(player != null && player.getIpAddress().equals(ip))
     			result.add(player);
     	}
     	return result;
     }
 
-    public void sendToAll(Packet packet, PlayerImpl... except) {
+    public void sendToAll(Packet packet, Player... except) {
         //Set<PlayerImpl> excludes = ImmutableSet.copyOf(except);
-    	Set<PlayerImpl> excludes = ImmutableSet.of(except);
+    	Set<Player> excludes = ImmutableSet.of(except);
 
         getAllPlayers().stream().filter((p) -> !excludes.contains(p)).forEach((p) -> p.getConnection().sendPacket(packet));
     }

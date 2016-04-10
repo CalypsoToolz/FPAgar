@@ -28,9 +28,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.google.common.collect.ImmutableList;
 
-import ru.calypso.ogar.api.entity.Entity;
 import ru.calypso.ogar.server.OgarServer;
-import ru.calypso.ogar.server.entity.EntityImpl;
+import ru.calypso.ogar.server.entity.Entity;
 import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
 import ru.calypso.ogar.server.net.PlayerConnection;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateNodes;
@@ -41,14 +40,14 @@ import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateNodes;
 
 public class PlayerTracker {
 
-    private final PlayerImpl player;
+    private final Player player;
     private final PlayerConnection conn;
-    private final WorldImpl world;
+    private final World world;
     private final Set<Integer> visibleEntities = new HashSet<>();
     private final ReadWriteLock lockV = new ReentrantReadWriteLock();
 	private final Lock visRead = lockV.readLock();
 	
-    private final ArrayDeque<EntityImpl> removalQueue = new ArrayDeque<>();
+    private final ArrayDeque<Entity> removalQueue = new ArrayDeque<>();
     private double rangeX;
     private double rangeY;
     private double centerX;
@@ -57,13 +56,13 @@ public class PlayerTracker {
     private ViewBox viewBox = new ViewBox();
     private long lastViewUpdateTick = 0L;
 
-    public PlayerTracker(PlayerImpl player) {
+    public PlayerTracker(Player player) {
         this.player = player;
         this.conn = player.getConnection();
         this.world = OgarServer.getInstance().getWorld();
     }
 
-    public void removeByEating(EntityImpl entity) {
+    public void removeByEating(Entity entity) {
     	if (!removalQueue.contains(entity)) {
     		removalQueue.add(entity);
     	}
@@ -174,9 +173,9 @@ public class PlayerTracker {
 		// ID nod'ов, которые будут обновлены
 		Set<Integer> updates = new HashSet<>();
 		// ноды, которые были съедены
-		Set<EntityImpl> removalsByEating = new HashSet<>();
+		Set<Entity> removalsByEating = new HashSet<>();
 		// ноды, которые нужно удалить с карты
-		Set<EntityImpl> removals = new HashSet<>();
+		Set<Entity> removals = new HashSet<>();
 		synchronized (removalQueue) {
 			removalsByEating.addAll(removalQueue);
 			removals.addAll(removalQueue);
@@ -198,7 +197,7 @@ public class PlayerTracker {
 					if (!newVisible.contains(id)) {
 						// Remove from player's screen
 						it.remove();
-						EntityImpl ee = world.getEntity(id);
+						Entity ee = world.getEntity(id);
 						if(ee == null)
 							continue;
 						removals.add(ee);
@@ -219,7 +218,7 @@ public class PlayerTracker {
 			// Update entities that need to be updated
 			for (Iterator<Integer> it = visibleEntities.iterator(); it.hasNext();) {
 				int id = it.next();
-				EntityImpl entity = world.getEntity(id);
+				Entity entity = world.getEntity(id);
 				if (entity == null) {
 					// Prune invalid entity from the list
 					it.remove();
