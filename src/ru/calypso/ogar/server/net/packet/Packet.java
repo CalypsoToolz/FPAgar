@@ -18,9 +18,14 @@ package ru.calypso.ogar.server.net.packet;
 
 import com.google.common.base.Charsets;
 import io.netty.buffer.ByteBuf;
+
 import java.nio.ByteOrder;
 
+import org.apache.log4j.Logger;
+
 public abstract class Packet {
+
+	public static final Logger _log = Logger.getLogger(Packet.class);
 
     /**
      * Writes packet data, excluding the packet ID, to the specified buffer.

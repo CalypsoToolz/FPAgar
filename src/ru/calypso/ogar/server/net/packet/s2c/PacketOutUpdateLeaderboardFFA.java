@@ -22,6 +22,7 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import ru.calypso.ogar.server.OgarServer;
+import ru.calypso.ogar.server.config.Config;
 import ru.calypso.ogar.server.net.packet.Packet;
 import ru.calypso.ogar.server.net.throwable.WrongDirectionException;
 import ru.calypso.ogar.server.world.PlayerImpl;
@@ -37,20 +38,25 @@ public class PacketOutUpdateLeaderboardFFA extends Packet {
 
     public PacketOutUpdateLeaderboardFFA(OgarServer server) {
         this.server = server;
+    	prepare();
+    }
+
+    public int getSize()
+    {
+    	return allParticates.size();
     }
 
     @Override
     public void writeData(ByteBuf buf) {
-    	prepare();
-    	int max = 10;// TODO config
-    	if(allParticates.size() >= max)
-    		buf.writeInt(max);
+    	if(allParticates.size() >= Config.Server.LB_MAX_RESULTS)
+    		buf.writeInt(Config.Server.LB_MAX_RESULTS);
     	else
     		buf.writeInt(allParticates.size());
-    	for(PlayerImpl player : allParticates)
+
+    	for(int i = 0; i < Config.Server.LB_MAX_RESULTS && i < allParticates.size(); i++)
     	{
-    		 buf.writeInt(player.getCellIdAt(0));
-             writeUTF16(buf, player.getName());
+   		 	buf.writeInt(allParticates.get(i).getCellIdAt(0));
+   		 	writeUTF16(buf, allParticates.get(i).getName());
     	}
     }
 

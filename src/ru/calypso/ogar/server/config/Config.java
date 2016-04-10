@@ -27,7 +27,7 @@ public class Config
 		/** порт сервера */
 		public static int PORT;
 		/** макс допустимое кол-во подключенных клиентов */
-		public static int MAX_PLAYERS;
+		public static int MAX_PLAYERS, LB_MAX_RESULTS;
 		public static int AUTORESTART_DELAY;
 		public static String AMDIN_PASS;
 		public static String MODER_PASS;
@@ -36,7 +36,7 @@ public class Config
 		public static boolean LOG_DEBUG, PRINT_DEBUG, LOG_CHAT, PRINT_CHAT,
 		LOG_SUCCESS_AUTH, LOG_USER_COMMANDS_USE, LOG_ADMIN_COMMANDS_USE,
 		PRINT_MEM_USAGE, PRINT_UPTIME, PRINT_ONLINE;
-		public static long INFO_PRINT_TASK_DELAY = 10000L;
+		public static long INFO_PRINT_TASK_DELAY, LB_SEND_INTERVAL;
 	}
 
 	public static class WorldConfig
@@ -108,6 +108,8 @@ public class Config
 		ExProperties config = load(SERVER_CFG);
 		Server.PORT = config.getProperty("ServerPort", 443);
 		Server.MAX_PLAYERS = config.getProperty("MaxPlayers", 100);
+		Server.LB_SEND_INTERVAL = config.getProperty("LeaderBoardSendInterval", 1000L);
+		Server.LB_MAX_RESULTS = config.getProperty("LeaderBoardMaxPlayers", 10);
 		Server.AUTORESTART_DELAY = 60 * config.getProperty("AutoRestartDelay", 120);
 		Server.AMDIN_PASS = config.getProperty("AdminPass", "adminpass");
 		Server.MODER_PASS = config.getProperty("ModerPass", "moderpass");

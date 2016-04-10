@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class RunnableImpl implements Runnable
 {
-	private static final Logger _log = Logger.getLogger(RunnableImpl.class);
+	public static final Logger _log = Logger.getLogger(RunnableImpl.class);
 	protected abstract void runImpl() throws Exception;
 
 	@Override
