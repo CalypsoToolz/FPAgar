@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="classes" path="src"/>
-	<classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
-	<classpathentry kind="lib" path="/media/hard/workspace/FPAgar/libs/commons-io-2.0.1.jar"/>
-	<classpathentry kind="lib" path="/media/hard/workspace/FPAgar/libs/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="/media/hard/workspace/FPAgar/libs/ecj-4.4.jar"/>
-	<classpathentry kind="lib" path="/media/hard/workspace/FPAgar/libs/google-collections-1.0.jar"/>
-	<classpathentry kind="lib" path="/media/hard/workspace/FPAgar/libs/guava-18.0.jar"/>
-	<classpathentry kind="lib" path="/media/hard/workspace/FPAgar/libs/jline-2.13.jar"/>
-	<classpathentry kind="lib" path="/media/hard/workspace/FPAgar/libs/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="/media/hard/workspace/FPAgar/libs/netty-all-4.0.4.Final.jar"/>
-	<classpathentry kind="lib" path="/media/hard/workspace/FPAgar/libs/trove-3.0.0a5.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="dist/scripts"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="libs/google-collections-1.0.jar"/>
+	<classpathentry kind="lib" path="libs/netty-all-4.0.4.Final.jar"/>
+	<classpathentry kind="lib" path="libs/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="libs/trove-3.0.0a5.jar"/>
+	<classpathentry kind="lib" path="libs/guava-18.0.jar"/>
+	<classpathentry kind="lib" path="libs/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="libs/ecj-4.4.jar"/>
+	<classpathentry kind="lib" path="libs/commons-io-2.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/jline-2.13.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
