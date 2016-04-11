@@ -121,6 +121,7 @@ public class PlayerConnection {
     	if(isConnected(true))
     	{
 	        if (player.getCells().isEmpty()) {
+	        	player.getTracker().setIsSpectator(false);
 	        	//if(packet.nickname.isEmpty())
 	        	//	packet.nickname = "Cell" + hashCode();
 	        	if(packet.nickname.length() > Config.Player.MAX_NICK_LENGTH)
@@ -139,7 +140,11 @@ public class PlayerConnection {
     }
 
     public void handle(PacketInSpectate packet) {
-        isConnected(true);
+        if(isConnected(true) && player.getCells().isEmpty())
+        {
+        	player.getTracker().setIsSpectator(true);
+            _log.info("Set spect!");
+        }
     }
 
     public void handle(PacketInSetLanguage packet) {
@@ -266,11 +271,12 @@ public class PlayerConnection {
     }
 
     public void handle(PacketInPressQ packet) {
-    	isConnected(true);
+    	if(isConnected(true) && player.getTracker().isSpectator())
+    		player.getTracker().setIsFreeCamera(!player.getTracker().isFreeCamera());
     }
 
     public void handle(PacketInReleaseQ packet) {
-        isConnected(true);
+    	isConnected(true);
     }
 
     public void handle(PacketInEjectMass packet) {

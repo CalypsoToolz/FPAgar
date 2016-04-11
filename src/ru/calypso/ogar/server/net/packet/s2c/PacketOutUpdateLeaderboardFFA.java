@@ -46,6 +46,19 @@ public class PacketOutUpdateLeaderboardFFA extends Packet {
     	return allParticates.size();
     }
 
+    /** 
+     * 
+     * @param index (начинается с 0!)
+     * @return игрок из массива таблицы лидеров
+     */
+    public Player getPlayerAtIndex(int index)
+    {
+    	if(index + 1 > getSize())
+    		return null;
+
+    	return allParticates.get(index);
+    }
+
     @Override
     public void writeData(ByteBuf buf) {
     	if(allParticates.size() >= Config.Server.LB_MAX_RESULTS)

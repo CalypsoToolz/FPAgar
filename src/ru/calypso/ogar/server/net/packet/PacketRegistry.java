@@ -37,6 +37,7 @@ import ru.calypso.ogar.server.net.packet.s2c.PacketOutClearNodes;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutDrawLine;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateLeaderboardFFA;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateNodes;
+import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdatePosition;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutWorldBorder;
 import ru.calypso.ogar.server.net.packet.universal.PacketChat;
 
@@ -52,6 +53,7 @@ public class PacketRegistry {
     static {
         // Clientbound packets (s2c)
         SERVER2CLIENT.registerPacket(16, PacketOutUpdateNodes.class);
+        SERVER2CLIENT.registerPacket(17, PacketOutUpdatePosition.class);
         SERVER2CLIENT.registerPacket(20, PacketOutClearNodes.class);
         SERVER2CLIENT.registerPacket(21, PacketOutDrawLine.class);
         SERVER2CLIENT.registerPacket(32, PacketOutAddNode.class);

@@ -28,6 +28,7 @@ import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
 import ru.calypso.ogar.server.entity.impl.FoodEntityImpl;
 import ru.calypso.ogar.server.entity.impl.MassEntityImpl;
 import ru.calypso.ogar.server.entity.impl.VirusEntityImpl;
+import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateLeaderboardFFA;
 import ru.calypso.ogar.server.util.Position;
 
 import java.util.Collection;
@@ -59,6 +60,11 @@ public class World {
         this.border = new Border();
         this.view = new View();
     }
+
+	public Player getLargestPlayer()
+	{
+		return new PacketOutUpdateLeaderboardFFA(server).getPlayerAtIndex(0);		
+	}
 
     public Entity spawnEntity(EntityType type) {
         return spawnEntity(type, getRandomPosition());

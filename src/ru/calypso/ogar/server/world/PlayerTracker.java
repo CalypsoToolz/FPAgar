@@ -32,7 +32,10 @@ import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.entity.Entity;
 import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
 import ru.calypso.ogar.server.net.PlayerConnection;
+import ru.calypso.ogar.server.net.PlayerConnection.MousePosition;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateNodes;
+import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdatePosition;
+import ru.calypso.ogar.server.util.Position;
 
 /**
  * @autor OgarProject, done by Calypso - Freya Project team
@@ -53,6 +56,8 @@ public class PlayerTracker {
     private double centerX;
     private double centerY;
 
+    private boolean isSpectator = false, isFreeCamera;
+
     private ViewBox viewBox = new ViewBox();
     private long lastViewUpdateTick = 0L;
 
@@ -60,6 +65,22 @@ public class PlayerTracker {
         this.player = player;
         this.conn = player.getConnection();
         this.world = OgarServer.getInstance().getWorld();
+    }
+
+    public void setCenterX(double x)
+    {
+    	centerX = x;
+    }
+
+    public void setCenterY(double y)
+    {
+    	centerY = y;
+    }
+
+    public void setCenterPos(Position pos)
+    {
+    	centerX = pos.getX();
+    	centerY = pos.getY();
     }
 
     public void removeByEating(Entity entity) {
@@ -93,7 +114,7 @@ public class PlayerTracker {
     }
 
     public void updateView() {
-        updateRange();
+    	updateRange();
         updateCenter();
 
         /*
@@ -187,7 +208,12 @@ public class PlayerTracker {
 			updateView();
 
 			// получаем временный список нодов, которые будут видны
-			List<Integer> newVisible = calculateEntitiesInView();
+			List<Integer> newVisible = new ArrayList<Integer>();
+			
+			if (isSpectator())
+				newVisible = getEntitiesForSpect();
+			else
+				newVisible = calculateEntitiesInView();
 
 			synchronized (visibleEntities) {
 				// удаляем из этого списка уже несуществующие ноды
@@ -232,6 +258,94 @@ public class PlayerTracker {
 		}
 		
 		conn.sendPacket(new PacketOutUpdateNodes(world, removals, removalsByEating, updates));
+	}
+
+	public List<Integer> getEntitiesForSpect()
+	{
+		if(isSpectator())
+    	{
+    		Player target = world.getLargestPlayer();
+    		if(target != null)
+    		{
+    			if(!isFreeCamera())
+    			{
+    				double zoom = Math.sqrt(100 * target.getTotalMass());
+    				zoom = Math.pow(Math.min(40.5 / zoom, 1.0), 0.4) * 0.6;
+    				setCenterPos(new Position(target.getTracker().centerX, target.getTracker().centerY));
+    		        player.sendPacket(new PacketOutUpdatePosition(centerX, centerY, zoom));
+    		        
+    		        return target.getTracker().getVisibleEntities();
+    			}
+    		}
+    		else
+    			return getEntitiesInFreeCamera();
+    	}
+		return getEntitiesInFreeCamera();
+	}
+
+	public List<Integer> getEntitiesInFreeCamera()
+	{
+		MousePosition mouse = player.getConnection().getGlobalMousePosition();
+		double dist = new Position(mouse.getX(), mouse.getY()).distance(centerX, centerY);
+	    
+		double deltaX = mouse.getX() - centerX;
+        double deltaY = mouse.getY() - centerY;
+        double angle = Math.atan2(deltaX, deltaY);     
+	    double speed = Math.min(dist / 10, 190);
+	    
+	    centerX += speed * Math.sin(angle);
+	    centerY += speed * Math.cos(angle);
+	    checkBorderPass();
+	    
+	    double viewMult = 3;
+	    viewBox.topY = centerY - world.getView().getBaseY() * viewMult;
+	    viewBox.bottomY = centerY + world.getView().getBaseY() * viewMult;
+	    viewBox.leftX = centerX - world.getView().getBaseX() * viewMult;
+	    viewBox.rightX = centerX + world.getView().getBaseX() * viewMult;
+	    viewBox.width = world.getView().getBaseX() * viewMult;
+	    viewBox.height = world.getView().getBaseY() * viewMult;
+	    
+	    double zoom = 500;
+	    zoom = Math.pow(Math.min(40.5 / zoom, 1.0), 0.4) * 0.6;
+        player.sendPacket(new PacketOutUpdatePosition(centerX, centerY, zoom));
+	    
+		return calculateEntitiesInView();
+		
+	}
+
+	public void checkBorderPass() {
+	    if (centerX < world.getBorder().getLeft()) {
+	    	centerX = world.getBorder().getLeft();
+	    }
+	    if (centerX > world.getBorder().getRight()) {
+	    	centerX = world.getBorder().getRight();
+	    }
+	    if (centerY < world.getBorder().getTop()) {
+	    	centerY = world.getBorder().getTop();
+	    }
+	    if (centerY > world.getBorder().getBottom()) {
+	    	centerY = world.getBorder().getBottom();
+	    }
+	}
+
+	public boolean isSpectator()
+	{
+		return isSpectator;
+	}
+
+	public boolean isFreeCamera()
+	{
+		return isFreeCamera;
+	}
+
+	public void setIsSpectator(boolean flag)
+	{
+		isSpectator = flag;
+	}
+
+	public void setIsFreeCamera(boolean flag)
+	{
+		isFreeCamera = flag;
 	}
 
 	public class ViewBox
