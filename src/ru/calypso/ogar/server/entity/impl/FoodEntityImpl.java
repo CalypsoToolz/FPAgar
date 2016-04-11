@@ -47,5 +47,7 @@ public class FoodEntityImpl extends Entity {
 
     @Override
     public void onRemove()
-    {}
+    {
+    	getWorld().getServer().getFoodList().removeFood(this);
+    }
 }

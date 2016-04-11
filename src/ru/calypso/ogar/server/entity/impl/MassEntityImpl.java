@@ -100,7 +100,9 @@ public class MassEntityImpl extends Entity {
 
     @Override
     public void onRemove()
-    {}
+    {
+    	getWorld().getServer().getMassList().removeMass(this);
+    }
 
     public void setCellSpawner(int id)
     {

@@ -244,24 +244,7 @@ public abstract class Entity implements Tickable {
      */
     public abstract void tick();
 
-    public void onRemove()
-    {
-    	switch(getType())
-    	{
-	        case FOOD:
-	        	getWorld().getServer().getFoodList().removeFood((FoodEntityImpl)this);
-	            break;
-	        case MASS:
-	        	getWorld().getServer().getMassList().removeMass((MassEntityImpl)this);
-	            break;
-	        case VIRUS:
-	        	getWorld().getServer().getVirusList().removeVirus((VirusEntityImpl)this);
-	            break;
-	        default:
-	        	// none
-	        	break;
-    	}
-    }
+    public abstract void onRemove();
 
     @Override
     public int hashCode() {

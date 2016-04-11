@@ -67,7 +67,9 @@ public class VirusEntityImpl extends Entity {
 
     @Override
     public void onRemove()
-    {}
+    {
+    	getWorld().getServer().getVirusList().removeVirus(this);
+    }
 
     public void searchMass()
     {
