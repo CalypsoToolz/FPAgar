@@ -141,10 +141,7 @@ public class PlayerConnection {
 
     public void handle(PacketInSpectate packet) {
         if(isConnected(true) && player.getCells().isEmpty())
-        {
         	player.getTracker().setIsSpectator(true);
-            _log.info("Set spect!");
-        }
     }
 
     public void handle(PacketInSetLanguage packet) {
