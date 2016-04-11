@@ -177,7 +177,7 @@ public class OgarServer {
         }
 
 		// запускаем таск на отправку leaderboard
-		ThreadPoolManager.getInstance().scheduleAtFixedDelay(new LeaderBoardSendTask(this), 1000L, 1000L);
+		ThreadPoolManager.getInstance().scheduleAtFixedDelay(new LeaderBoardSendTask(this), Config.Server.LB_SEND_INTERVAL, Config.Server.LB_SEND_INTERVAL);
 		// запускаем таски на спаун еды
 		ThreadPoolManager.getInstance().schedule(new FoodSpawnTask(this, Config.Food.SPAWN_ONSTART), 10L);
 		ThreadPoolManager.getInstance().scheduleAtFixedDelay(new FoodSpawnTask(this, Config.Food.SPAWN_PER_TASK), 1000L,
