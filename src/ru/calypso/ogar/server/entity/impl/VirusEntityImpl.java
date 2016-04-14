@@ -16,7 +16,6 @@
  */
 package ru.calypso.ogar.server.entity.impl;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +26,7 @@ import ru.calypso.ogar.server.entity.EntityType;
 import ru.calypso.ogar.server.util.Position;
 import ru.calypso.ogar.server.util.move.CustomMoveEngine;
 import ru.calypso.ogar.server.world.World;
+import ru.calypso.ogar.server.xml.holder.VirusColorsHolder;
 
 /**
  * @autor Calypso - Freya Project team
@@ -39,7 +39,7 @@ public class VirusEntityImpl extends Entity {
     public VirusEntityImpl(World world, Position position) {
         super(EntityType.VIRUS, world, position);
         this.mass = Config.Virus.MASS;
-        this.color = Color.GREEN;
+        setColor(VirusColorsHolder.getInstance().getRndColor());
     }
 
     @Override

@@ -26,15 +26,14 @@ import ru.calypso.ogar.server.entity.Entity;
 import ru.calypso.ogar.server.entity.EntityType;
 import ru.calypso.ogar.server.net.PlayerConnection.MousePosition;
 import ru.calypso.ogar.server.tasks.MassDecayTask;
-import ru.calypso.ogar.server.util.EntityColors.PlayerColor;
 import ru.calypso.ogar.server.util.MathHelper;
 import ru.calypso.ogar.server.util.Position;
 import ru.calypso.ogar.server.util.PositionFixed;
-import ru.calypso.ogar.server.util.Rnd;
 import ru.calypso.ogar.server.util.move.CustomMoveEngine;
 import ru.calypso.ogar.server.util.threads.ThreadPoolManager;
 import ru.calypso.ogar.server.world.Player;
 import ru.calypso.ogar.server.world.World;
+import ru.calypso.ogar.server.xml.holder.PlayerColorsHolder;
 
 /**
  * @autor OgarProject, done by Calypso - Freya Project team
@@ -56,7 +55,7 @@ public class CellEntityImpl extends Entity {
         // если у игрока нет шаров, то ставим рандомный цвет
         if(owner.getCells().isEmpty())
         {
-        	setColor(PlayerColor.values()[Rnd.get(0, PlayerColor.values().length - 1)].get());
+        	setColor(PlayerColorsHolder.getInstance().getRndColor());
         	owner.setCellsColor(getColor());
         }
         else // а если есть, то ставим такой же как и на остальных

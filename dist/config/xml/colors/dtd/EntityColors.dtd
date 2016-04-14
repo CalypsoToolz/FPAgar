@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!ELEMENT colors (color)*>
+<!ELEMENT color (#PCDATA)>
+<!ATTLIST color
+	name CDATA #IMPLIED
+	red CDATA #REQUIRED
+	green CDATA #REQUIRED
+	blue CDATA #REQUIRED>

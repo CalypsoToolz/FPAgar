@@ -19,9 +19,8 @@ package ru.calypso.ogar.server.entity.impl;
 import ru.calypso.ogar.server.config.Config;
 import ru.calypso.ogar.server.entity.Entity;
 import ru.calypso.ogar.server.entity.EntityType;
-import ru.calypso.ogar.server.util.Rnd;
 import ru.calypso.ogar.server.world.World;
-import ru.calypso.ogar.server.util.EntityColors.FoodColor;
+import ru.calypso.ogar.server.xml.holder.FoodColorsHolder;
 import ru.calypso.ogar.server.util.Position;
 
 /**
@@ -33,7 +32,7 @@ public class FoodEntityImpl extends Entity {
     public FoodEntityImpl(World world, Position position) {
         super(EntityType.FOOD, world, position);
         this.mass = Config.Food.MASS;
-        setColor(FoodColor.values()[Rnd.get(0, FoodColor.values().length - 1)].get());
+        setColor(FoodColorsHolder.getInstance().getRndColor());
     }
 
     @Override

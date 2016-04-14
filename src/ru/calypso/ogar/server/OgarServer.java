@@ -137,6 +137,9 @@ public class OgarServer {
         Config.loadAll();
         _log.info("Loaded!");
 		_log.info("=================================================");
+		
+		Parsers.parseAll();
+		
         // проверяем порт на доступность, если занят, то ждем пока не освободится
         checkPort();
         world = new World(this);

@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="libs/ecj-4.4.jar"/>
 	<classpathentry kind="lib" path="libs/commons-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/jline-2.13.jar"/>
+	<classpathentry kind="lib" path="libs/dom4j-2.0.0-alpha-2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

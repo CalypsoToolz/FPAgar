@@ -13,7 +13,7 @@ public abstract class AbstractHolder extends LoggerObject
 		info(String.format("loaded %d%s(s) count.", size(), formatOut(getClass().getSimpleName().replace("Holder", "")).toLowerCase()));
 	}
 
-	protected void process()
+	public void process()
 	{
 		
 	}

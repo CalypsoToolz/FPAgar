@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE colors SYSTEM "/dtd/EntityColors.dtd">
+<!-- parameter "name" is optional -->
+<colors>
+	<color name="Red" red="255" green="0" blue="0"/>
+	<color name="Green" red="0" green="255" blue="0"/>
+	<color name="Blue" red="0" green="0" blue="255"/>
+	<color name="Yellow" red="255" green="255" blue="0"/>
+	<color name="Orange" red="255" green="200" blue="0"/>
+	<color name="Cyan" red="0" green="255" blue="255"/>
+	<color name="Magenta" red="255" green="0" blue="255"/>
+</colors>
