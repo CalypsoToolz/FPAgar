@@ -19,8 +19,6 @@ public class LeaderBoardSendTask extends RunnableImpl
 	@Override
 	protected void runImpl() throws Exception
 	{
-		PacketOutUpdateLeaderboardFFA lb = new PacketOutUpdateLeaderboardFFA(server);
-		if(lb.getSize() > 0)
-			server.getPlayerList().sendToAll(lb);
+		server.getPlayerList().sendToAll(new PacketOutUpdateLeaderboardFFA(server));
 	}
 }
