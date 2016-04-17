@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//dist/config/Food.properties=UTF-8
 encoding//dist/config/Mass.properties=UTF-8
+encoding//dist/config/Others.properties=UTF-8
 encoding//dist/config/Player.properties=UTF-8
 encoding//dist/config/Server.properties=UTF-8
 encoding//dist/config/Virus.properties=UTF-8

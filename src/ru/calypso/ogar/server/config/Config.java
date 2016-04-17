@@ -21,6 +21,7 @@ public class Config
 	private static final String MASS_CFG = "config/Mass.properties";
 	private static final String FOOD_CFG = "config/Food.properties";
 	private static final String VIRUSES_CFG = "config/Virus.properties";
+	private static final String OTHERS_CFG = "config/Others.properties";
 
 	public static class Server
 	{
@@ -101,6 +102,12 @@ public class Config
 		public static long SPAWN_TASK_DELAY;
 		public static int SPAWN_ONSTART;
 		public static int SPAWN_PER_TASK;
+	}
+
+	public static class Other
+	{
+		public static long STAT_SEND_DELAY;
+		public static String STAT_MAPSIZE_TYPE;
 	}
 
 	private static void loadServerConfig()
@@ -185,6 +192,13 @@ public class Config
 		Virus.SPAWN_PER_TASK = config.getProperty("VirusesSpawnCount", 1);
 	}
 
+	private static void loadOthersConfig()
+	{
+		ExProperties config = load(OTHERS_CFG);
+		Other.STAT_SEND_DELAY = config.getProperty("StatSendDelay", 0L);
+		Other.STAT_MAPSIZE_TYPE = config.getProperty("MapRatioTypeForStat", "right:bottom");
+	}
+
 	public static void loadAll()
 	{
 		loadServerConfig();
@@ -193,6 +207,7 @@ public class Config
 		loadMassConfig();
 		loadFoodConfig();
 		loadVirusConfig();
+		loadOthersConfig();
 	}
 
 	private static ExProperties load(String filename)

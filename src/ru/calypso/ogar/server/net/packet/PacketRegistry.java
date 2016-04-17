@@ -35,6 +35,7 @@ import ru.calypso.ogar.server.net.packet.c2s.PacketInToken;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutAddNode;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutClearNodes;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutDrawLine;
+import ru.calypso.ogar.server.net.packet.s2c.PacketOutSendStat;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateLeaderboardFFA;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateNodes;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdatePosition;
@@ -59,6 +60,7 @@ public class PacketRegistry {
         SERVER2CLIENT.registerPacket(32, PacketOutAddNode.class);
         SERVER2CLIENT.registerPacket(49, PacketOutUpdateLeaderboardFFA.class);
         SERVER2CLIENT.registerPacket(64, PacketOutWorldBorder.class);
+        SERVER2CLIENT.registerPacket(90, PacketOutSendStat.class);
         SERVER2CLIENT.registerPacket(99, PacketChat.class);
 
         // Serverbound packets (c2s)

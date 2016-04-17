@@ -39,6 +39,7 @@ import ru.calypso.ogar.server.holders.VirusList;
 import ru.calypso.ogar.server.net.NetworkManager;
 import ru.calypso.ogar.server.tasks.FoodSpawnTask;
 import ru.calypso.ogar.server.tasks.LeaderBoardSendTask;
+import ru.calypso.ogar.server.tasks.StatSendTask;
 import ru.calypso.ogar.server.tasks.VirusSpawnTask;
 import ru.calypso.ogar.server.tick.TickWorker;
 import ru.calypso.ogar.server.tick.Tickable;
@@ -181,6 +182,9 @@ public class OgarServer {
 
 		// запускаем таск на отправку leaderboard
 		ThreadPoolManager.getInstance().scheduleAtFixedDelay(new LeaderBoardSendTask(this), Config.Server.LB_SEND_INTERVAL, Config.Server.LB_SEND_INTERVAL);
+		// запускаем таск на отправку статистики
+		if(Config.Other.STAT_SEND_DELAY > 0L)
+			ThreadPoolManager.getInstance().scheduleAtFixedDelay(new StatSendTask(), Config.Other.STAT_SEND_DELAY, Config.Other.STAT_SEND_DELAY);
 		// запускаем таски на спаун еды
 		ThreadPoolManager.getInstance().schedule(new FoodSpawnTask(this, Config.Food.SPAWN_ONSTART), 10L);
 		ThreadPoolManager.getInstance().scheduleAtFixedDelay(new FoodSpawnTask(this, Config.Food.SPAWN_PER_TASK), 1000L,
