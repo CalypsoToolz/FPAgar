@@ -108,6 +108,9 @@ public class Config
 	{
 		public static long STAT_SEND_DELAY;
 		public static String STAT_MAPSIZE_TYPE;
+		
+		public static long PING_SEND_DELAY;
+		public static int MAX_PING_TRYING, MAX_ALLOWED_PING;
 	}
 
 	private static void loadServerConfig()
@@ -197,6 +200,10 @@ public class Config
 		ExProperties config = load(OTHERS_CFG);
 		Other.STAT_SEND_DELAY = config.getProperty("StatSendDelay", 0L);
 		Other.STAT_MAPSIZE_TYPE = config.getProperty("MapRatioTypeForStat", "right:bottom");
+		
+		Other.PING_SEND_DELAY = config.getProperty("PingSendDelay", 0L);
+		Other.MAX_PING_TRYING = config.getProperty("MaxFailPing", 2);
+		Other.MAX_ALLOWED_PING = config.getProperty("MaxAllowedPing", 100);
 	}
 
 	public static void loadAll()

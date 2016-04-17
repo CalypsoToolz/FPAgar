@@ -59,6 +59,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Packet> {
         PlayerDisconnectEvent event = new PlayerDisconnectEvent(player);
         PlayerEventHandler.getInstance().handleEvent(event);
         server.getPlayerList().removePlayer(player);
+        player.getConnection().stopPingTask();
 		//_log.info("Client disconnected! IP: " + ctx.channel().remoteAddress() + (player.getName() == null ? "." : ", name: " + player.getName()));
     }
 

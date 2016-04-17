@@ -20,6 +20,7 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
+import ru.calypso.ogar.server.config.Config;
 import ru.calypso.ogar.server.net.packet.c2s.PacketInAuthenticate;
 import ru.calypso.ogar.server.net.packet.c2s.PacketInEjectMass;
 import ru.calypso.ogar.server.net.packet.c2s.PacketInFacebookLogin;
@@ -41,6 +42,7 @@ import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateNodes;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdatePosition;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutWorldBorder;
 import ru.calypso.ogar.server.net.packet.universal.PacketChat;
+import ru.calypso.ogar.server.net.packet.universal.PacketPing;
 
 /**
  * @autor OgarProject, modify by Calypso - Freya Project team
@@ -60,8 +62,11 @@ public class PacketRegistry {
         SERVER2CLIENT.registerPacket(32, PacketOutAddNode.class);
         SERVER2CLIENT.registerPacket(49, PacketOutUpdateLeaderboardFFA.class);
         SERVER2CLIENT.registerPacket(64, PacketOutWorldBorder.class);
-        SERVER2CLIENT.registerPacket(90, PacketOutSendStat.class);
+        if(Config.Other.STAT_SEND_DELAY > 0L)
+        	SERVER2CLIENT.registerPacket(90, PacketOutSendStat.class);
         SERVER2CLIENT.registerPacket(99, PacketChat.class);
+        if(Config.Other.PING_SEND_DELAY > 0L)
+        	SERVER2CLIENT.registerPacket(100, PacketPing.class);
 
         // Serverbound packets (c2s)
         CLIENT2SERVER.registerPacket(0, PacketInSetNick.class);
@@ -77,6 +82,8 @@ public class PacketRegistry {
         CLIENT2SERVER.registerPacket(99, PacketChat.class);
         CLIENT2SERVER.registerPacket(254, PacketInAuthenticate.class);
         CLIENT2SERVER.registerPacket(255, PacketInResetConnection.class);
+        if(Config.Other.PING_SEND_DELAY > 0L)
+        	CLIENT2SERVER.registerPacket(100, PacketPing.class);
     }
 
     // Static-use class

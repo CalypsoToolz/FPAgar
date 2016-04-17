@@ -19,6 +19,7 @@ package ru.calypso.ogar.server.net;
 import java.awt.Color;
 import java.net.SocketAddress;
 import java.util.Objects;
+import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 
@@ -27,6 +28,7 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.config.Config;
+import ru.calypso.ogar.server.config.Config.Other;
 import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
 import ru.calypso.ogar.server.events.PlayerEventHandler;
 import ru.calypso.ogar.server.events.player.PlayerConnectedEvent;
@@ -49,8 +51,10 @@ import ru.calypso.ogar.server.net.packet.c2s.PacketInSpectate;
 import ru.calypso.ogar.server.net.packet.c2s.PacketInSplit;
 import ru.calypso.ogar.server.net.packet.s2c.PacketOutWorldBorder;
 import ru.calypso.ogar.server.net.packet.universal.PacketChat;
+import ru.calypso.ogar.server.net.packet.universal.PacketPing;
 import ru.calypso.ogar.server.net.throwable.UnhandledPacketException;
 import ru.calypso.ogar.server.util.Log;
+import ru.calypso.ogar.server.util.threads.ThreadPoolManager;
 import ru.calypso.ogar.server.world.Player;
 
 /**
@@ -68,6 +72,8 @@ public class PlayerConnection {
     private int protocolVersion;
     private int attemptsAuth;
     private String authToken;
+	private Future<?> pingTask;
+	private int pingTryCount, pingTime;
 
     public PlayerConnection(Player player, Channel channel) {
         this.player = player;
@@ -110,7 +116,10 @@ public class PlayerConnection {
             handle((PacketInResetConnection) packet);
         } else if (packet instanceof PacketChat) {
             handle((PacketChat) packet);
-        } else {
+        } else if (packet instanceof PacketPing) {
+            handle((PacketPing) packet);
+        }
+        else {
             throw new UnhandledPacketException("Unhandled packet: " + packet);
         }
     }
@@ -315,6 +324,8 @@ public class PlayerConnection {
         Preconditions.checkState(state == ConnectionState.AUTHENTICATE, "Not expecting AUTHENTICATE");
         state = ConnectionState.RESET;
         protocolVersion = packet.protocolVersion;
+        if(Config.Other.PING_SEND_DELAY > 0L)
+        	startPingTask();
     }
 
     public void handle(PacketInResetConnection packet) {
@@ -396,6 +407,50 @@ public class PlayerConnection {
             return y;
         }
     }
+
+    private void startPingTask()
+	{
+		pingTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable(){
+			@Override
+			public void run()
+			{
+				if(++pingTryCount > Config.Other.MAX_PING_TRYING)
+					channel.close();
+				else
+				{
+					int time = (int) (System.currentTimeMillis() - OgarServer.getInstance().getStartTime());
+					sendPacket(new PacketPing(time));
+				}
+			}
+		}, 5000L, Config.Other.PING_SEND_DELAY);
+	}
+
+    public void handle(PacketPing packet)
+	{
+		pingTryCount--;
+		pingTime = (int) (System.currentTimeMillis() - OgarServer.getInstance().getStartTime() - packet.getTime());
+		pingTime /= 2;
+
+		if(pingTime < 0 || pingTime > Config.Other.MAX_ALLOWED_PING)
+    	{
+    		_log.info("Client \"" + player.getName() + "\" disconnected - ping: " + pingTime);
+    		channel.close();
+    	}
+	}
+
+	public int getPing()
+	{
+		return pingTime;
+	}
+
+	public void stopPingTask()
+	{
+		if(pingTask != null)
+		{
+			pingTask.cancel(false);
+			pingTask = null;
+		}
+	}
 
     private static enum ConnectionState {
 

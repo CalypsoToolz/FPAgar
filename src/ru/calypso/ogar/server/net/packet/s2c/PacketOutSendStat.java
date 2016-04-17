@@ -5,6 +5,7 @@ import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.config.Config;
 import ru.calypso.ogar.server.net.packet.Packet;
 import ru.calypso.ogar.server.net.throwable.WrongDirectionException;
+import ru.calypso.ogar.server.world.Player;
 
 /**
  * 
@@ -14,6 +15,13 @@ import ru.calypso.ogar.server.net.throwable.WrongDirectionException;
  */
 
 public class PacketOutSendStat extends Packet {
+
+	private Player player;
+
+	public PacketOutSendStat (Player player)
+	{
+		this.player = player;
+	}
 
 	@Override
 	public void writeData(ByteBuf buf) {
@@ -84,6 +92,9 @@ public class PacketOutSendStat extends Packet {
 		// food mass
 		buf.writeDouble(Config.Food.MASS);
 
+		// ping
+		buf.writeDouble(player.getConnection().getPing());
+		
 		// gamemode TODO
 		// 0 - FFA, 1 - TEAMS, 2 - EXP (on my client)
 		buf.writeDouble(0);
