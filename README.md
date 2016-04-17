@@ -1,24 +1,25 @@
-# Agar.io server writed on Java by Freya Project (Ogar2 based - Maybe I'll take the implementation of the code from scratch, if I have free time)
+[![Build Status](https://travis-ci.org/Calyps0/FPAgar.svg?branch=master)](https://travis-ci.org/Calyps0/FPAgar)
 
-Coming soon...
+# Agar.io server writed on Java by Freya Project (Ogar2 based)
 
-В свободное время занимаюсь реализацией юзабельной копии игры agar.io на Java, за основу был взят сурс https://github.com/OgarProject/Ogar2-Server (возможно будет написан с нуля).
+В свободное время занимаюсь реализацией юзабельной копии игры agar.io на Java, за основу был взят сурс https://github.com/OgarProject/Ogar2-Server
 
 Реализовано:
 - Таблица лидеров (FFA)
 - Деление
 - Кормление
 - Вирусы
+- Наблюдение
 - Поддержка пользовательских и админ-команд
 - Дополнительные привелегии (админ/модер)
 - Поддержка консольных команд
 - Более-менее играбельная физика
 - Потеря массы
 - Система банов по IP
-- Система зашиты ников паролем
+- Система защиты ников паролем
 - Авто-рестарт/выключение сервера
 - Чат (двунаправленный)
-- Мультиязычность
+- Мультиязычность чата
 - Поддержка внешних скриптов на java
 - Удобная и гибкая конфигурация
 - Удобная и гибкая в настройке система логирования
