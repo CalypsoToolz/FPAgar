@@ -124,6 +124,12 @@ public class World {
         return entity;
     }
 
+    public void forceUpdateEntities()
+    {
+    	for(Player player : server.getPlayerList().getAllPlayers())
+        	player.getTracker().updateNodes(true);
+    }
+
     public void removeEntity(Entity entity) {
         removeEntity(entity.getID());
     }

@@ -49,21 +49,14 @@ public class MassEntityImpl extends Entity {
         	return true;
         }
         
-    	return getCustomMoveEngineTicks() > 0;
+    	return getMoveEngineTicks() > 0;
     }
 
     @Override
     public void tick()
     {
-    	if (getCustomMoveEngineTicks() > 0) {
-		//	ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
-		//		@Override
-		//		public void runImpl() {
-					getCustomMoveEngine().tick();
-		//		}
-		//	}, 0L);
-		}
-    	// TODO mb to pool?
+    	if (getMoveEngineTicks() > 0)
+    		getMoveEngine().handleMove();
     	checkCollide();
     }
 

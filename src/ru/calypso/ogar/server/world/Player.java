@@ -123,15 +123,12 @@ public class Player {
     	finally{
     		cellWrite.unlock();
     	}
-        tracker.updateView();
-        tracker.updateNodes();
         playerConnection.sendPacket(new PacketOutAddNode(cell.getID()));
     }
 
     public void removeCell(CellEntityImpl cell) {
     	removeCell(cell.getID());
-    	tracker.updateView();
-    	tracker.updateNodes();
+    	tracker.updateNodes(true);
     }
 
     public void removeCell(int entityId) {

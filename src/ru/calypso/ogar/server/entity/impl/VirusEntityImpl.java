@@ -24,7 +24,7 @@ import ru.calypso.ogar.server.config.Config;
 import ru.calypso.ogar.server.entity.Entity;
 import ru.calypso.ogar.server.entity.EntityType;
 import ru.calypso.ogar.server.util.Position;
-import ru.calypso.ogar.server.util.move.CustomMoveEngine;
+import ru.calypso.ogar.server.util.move.MoveEngine;
 import ru.calypso.ogar.server.world.World;
 import ru.calypso.ogar.server.xml.holder.VirusColorsHolder;
 
@@ -52,18 +52,12 @@ public class VirusEntityImpl extends Entity {
     	return true;
     }
 
-    @Override
-    public void tick() {
-    	if (getCustomMoveEngineTicks() > 0) {
-			//ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
-			//	@Override
-			//	public void runImpl() {
-					getCustomMoveEngine().tick();
-			//	}
-			//}, 0L);
-		}
-    	searchMass();
-    }
+	@Override
+	public void tick() {
+		if (getMoveEngineTicks() > 0)
+			getMoveEngine().handleMove();
+		searchMass();
+	}
 
     @Override
     public void onRemove()
@@ -81,8 +75,7 @@ public class VirusEntityImpl extends Entity {
 
     public void consumeMass(MassEntityImpl food)
     {
-    	if(food.getCustomMoveEngine() != null)
-    		explodeAngle = food.getCustomMoveEngine().getAngle();
+    	explodeAngle = food.getMoveAngle();
     	mass += food.getMass();
     	food.kill(getID());
     	massConsumed++;
@@ -97,7 +90,9 @@ public class VirusEntityImpl extends Entity {
     public void shoot()
     {
     	VirusEntityImpl newVirus = (VirusEntityImpl) world.spawnEntity(EntityType.VIRUS, this.getPosition());
-    	newVirus.setCustomMoveEngine(new CustomMoveEngine(newVirus, explodeAngle, 200, 0.75, 20));
+    	OgarServer.getInstance().getWorld().forceUpdateEntities();
+    	newVirus.setMoveAngle(explodeAngle);
+    	newVirus.setMoveEngine(new MoveEngine(newVirus, 200, 20, 0.75));
     }
 
     public List<MassEntityImpl> findMassForEat(double radius)

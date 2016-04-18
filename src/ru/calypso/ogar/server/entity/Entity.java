@@ -27,12 +27,12 @@ import ru.calypso.ogar.server.entity.impl.MassEntityImpl;
 import ru.calypso.ogar.server.entity.impl.VirusEntityImpl;
 import ru.calypso.ogar.server.tick.Tickable;
 import ru.calypso.ogar.server.util.Position;
-import ru.calypso.ogar.server.util.move.CustomMoveEngine;
+import ru.calypso.ogar.server.util.move.MoveEngine;
 import ru.calypso.ogar.server.world.Player;
 import ru.calypso.ogar.server.world.World;
 
 /**
- * @autor OgarProject, done by Calypso - Freya Project team
+ * @author OgarProject, done by Calypso - Freya Project team
  */
 
 public abstract class Entity implements Tickable {
@@ -42,13 +42,14 @@ public abstract class Entity implements Tickable {
     protected final EntityType type;
     protected final World world;
     protected Position position;
-    protected CustomMoveEngine moveEngine;
+    protected MoveEngine moveEngine;
     protected Color color = Color.GREEN;
     protected int consumer = 0;
     protected int mass = 10;
     protected boolean spiked = false;
     protected boolean markAsEated = false;
     protected int collisionRestoreTicks = 0;
+    protected double moveAngle = 0D;
 
     public Entity(EntityType type, World world, Position position) {
         this.id = nextEntityId.getAndIncrement();
@@ -106,21 +107,21 @@ public abstract class Entity implements Tickable {
         return position.getY();
     }
  
-    public CustomMoveEngine getCustomMoveEngine()
+    public MoveEngine getMoveEngine()
     {
     	return moveEngine;
     }
 
-    public int getCustomMoveEngineTicks()
+    public int getMoveEngineTicks()
     {
     	return moveEngine == null ? 0 : moveEngine.getTicks();
     }
 
-    public void setCustomMoveEngine(CustomMoveEngine engine)
+    public void setMoveEngine(MoveEngine engine)
     {
     	moveEngine = engine;
     }
- 
+
     public VirusEntityImpl getNearestVirus(double radius)
     {
     	VirusEntityImpl virus = null;
@@ -279,4 +280,14 @@ public abstract class Entity implements Tickable {
 	public boolean isMass() {
 		return this instanceof MassEntityImpl;
 	}
+
+	public double getMoveAngle()
+    {
+    	return moveAngle;
+    }
+
+    public void setMoveAngle(double angle)
+    {
+    	moveAngle = angle;
+    }
 }

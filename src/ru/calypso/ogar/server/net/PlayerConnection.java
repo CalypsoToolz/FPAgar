@@ -131,8 +131,6 @@ public class PlayerConnection {
     	{
 	        if (player.getCells().isEmpty()) {
 	        	player.getTracker().setIsSpectator(false);
-	        	//if(packet.nickname.isEmpty())
-	        	//	packet.nickname = "Cell" + hashCode();
 	        	if(packet.nickname.length() > Config.Player.MAX_NICK_LENGTH)
 	        		packet.nickname.substring(0, Config.Player.MAX_NICK_LENGTH);
 	            PlayerNameChangeEvent event = new PlayerNameChangeEvent(player, packet.nickname);
@@ -257,9 +255,8 @@ public class PlayerConnection {
     		_log.info("Trying send movePacket, but connection is not in CONNECTED state! IP " + getRemoteAddress());
     		return;
     	}
-        if (packet.nodeId == 0) {
+        if (packet.nodeId == 0)
             globalMousePosition = new MousePosition(packet.x, packet.y);
-        }
     }
 
     public void handle(PacketInSplit packet) {

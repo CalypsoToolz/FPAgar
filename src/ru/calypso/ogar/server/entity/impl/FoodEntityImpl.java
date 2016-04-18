@@ -37,7 +37,7 @@ public class FoodEntityImpl extends Entity {
 
     @Override
     public boolean shouldUpdate() {
-        return getCustomMoveEngineTicks() > 0;
+        return getMoveEngineTicks() > 0;
     }
 
     @Override

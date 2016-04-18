@@ -22,9 +22,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.google.common.collect.ImmutableList;
 
@@ -47,8 +44,6 @@ public class PlayerTracker {
     private final PlayerConnection conn;
     private final World world;
     private final Set<Integer> visibleEntities = new HashSet<>();
-    private final ReadWriteLock lockV = new ReentrantReadWriteLock();
-	private final Lock visRead = lockV.readLock();
 	
     private final ArrayDeque<Entity> removalQueue = new ArrayDeque<>();
     private double rangeX;
@@ -83,7 +78,7 @@ public class PlayerTracker {
     	centerY = pos.getY();
     }
 
-    public void removeByEating(Entity entity) {
+    public synchronized void removeByEating(Entity entity) {
     	if (!removalQueue.contains(entity)) {
     		removalQueue.add(entity);
     	}
@@ -151,7 +146,7 @@ public class PlayerTracker {
         return true;
     }
 
-    private List<Integer> calculateEntitiesInView() {
+    private synchronized List<Integer> calculateEntitiesInView() {
     	List<Integer> result = new ArrayList<Integer>();
     	for (Iterator<Entity> it = world.getEntities().iterator(); it.hasNext();)
     	{
@@ -159,9 +154,7 @@ public class PlayerTracker {
     		// проверка для шаров массой менее 100
     		if (e.getMass() < 100) {
     	        if (visibleCheck(e))
-    	        {
     	        	result.add(e.getID());
-    	        }
     	    }
     		else
     		{
@@ -179,17 +172,11 @@ public class PlayerTracker {
     	return result;
     }
 
-    public List<Integer> getVisibleEntities() {
-    	visRead.lock();
-    	try{
-        	return ImmutableList.copyOf(visibleEntities);
-    	}
-    	finally{
-    		visRead.unlock();
-    	}
+    public synchronized List<Integer> getVisibleEntities() {
+        return ImmutableList.copyOf(visibleEntities);
     }
 
-	public void updateNodes()
+	public synchronized void updateNodes(boolean force)
 	{
 		// ID nod'ов, которые будут обновлены
 		Set<Integer> updates = new HashSet<>();
@@ -197,17 +184,15 @@ public class PlayerTracker {
 		Set<Entity> removalsByEating = new HashSet<>();
 		// ноды, которые нужно удалить с карты
 		Set<Entity> removals = new HashSet<>();
-		synchronized (removalQueue) {
+		//synchronized (removalQueue) {
 			removalsByEating.addAll(removalQueue);
 			removals.addAll(removalQueue);
 			removalQueue.clear();
-		}
+		//}
 
-		if (world.getServer().getTick() - lastViewUpdateTick >= 5) {
-			// обновим обзор, если нужно
+		if (force || world.getServer().getTick() - lastViewUpdateTick >= 5) {
 			updateView();
 
-			// получаем временный список нодов, которые будут видны
 			List<Integer> newVisible = new ArrayList<Integer>();
 			
 			if (isSpectator())
@@ -215,13 +200,10 @@ public class PlayerTracker {
 			else
 				newVisible = calculateEntitiesInView();
 
-			synchronized (visibleEntities) {
-				// удаляем из этого списка уже несуществующие ноды
+			//synchronized (visibleEntities) {
 				for (Iterator<Integer> it = visibleEntities.iterator(); it.hasNext();) {
 					int id = it.next();
-					// читай выше
 					if (!newVisible.contains(id)) {
-						// Remove from player's screen
 						it.remove();
 						Entity ee = world.getEntity(id);
 						if(ee == null)
@@ -230,37 +212,33 @@ public class PlayerTracker {
 					}
 				}
 
-				// Add new entities to the client's screen
 				for (int id : newVisible) {
 					if (!visibleEntities.contains(id)) {
 						visibleEntities.add(id);
 						updates.add(id);
 					}
 				}
-			}
+			//}
 		}
 
-		synchronized (visibleEntities) {
-			// Update entities that need to be updated
+		//synchronized (visibleEntities) {
 			for (Iterator<Integer> it = visibleEntities.iterator(); it.hasNext();) {
 				int id = it.next();
 				Entity entity = world.getEntity(id);
 				if (entity == null) {
-					// Prune invalid entity from the list
 					it.remove();
 					continue;
 				}
 	
-				if (entity.shouldUpdate()) {
+				if (entity.shouldUpdate())
 					updates.add(id);
-				}
 			}
-		}
+		//}
 		
 		conn.sendPacket(new PacketOutUpdateNodes(world, removals, removalsByEating, updates));
 	}
 
-	public List<Integer> getEntitiesForSpect()
+	public synchronized List<Integer> getEntitiesForSpect()
 	{
 		if(isSpectator())
     	{
@@ -283,7 +261,7 @@ public class PlayerTracker {
 		return getEntitiesInFreeCamera();
 	}
 
-	public List<Integer> getEntitiesInFreeCamera()
+	public synchronized List<Integer> getEntitiesInFreeCamera()
 	{
 		MousePosition mouse = player.getConnection().getGlobalMousePosition();
 		double dist = new Position(mouse.getX(), mouse.getY()).distance(centerX, centerY);
@@ -356,17 +334,5 @@ public class PlayerTracker {
 		public double rightX;
 		public double width;
 		public double height;
-
-		/*
-		public ViewBox(double topY, double bottomY, double leftX, double rightX, double width, double height)
-		{
-			this.topY = topY;
-			this.bottomY = bottomY;
-			this.leftX = leftX;
-			this.rightX = rightX;
-			this.width = width;
-			this.height = height;
-		}
-		*/
 	}
 }

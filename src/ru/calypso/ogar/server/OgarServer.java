@@ -233,7 +233,7 @@ public class OgarServer {
 
                 // Update nodes
                 for (Iterator<Player> it = playerList.getAllPlayers().iterator(); it.hasNext();) {
-                	tick(it.next().getTracker()::updateNodes);
+                	it.next().getTracker().updateNodes(false);
                 }
                                 
                 // Wait for the tick workers to finish
