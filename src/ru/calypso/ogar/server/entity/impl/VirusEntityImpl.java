@@ -29,7 +29,7 @@ import ru.calypso.ogar.server.world.World;
 import ru.calypso.ogar.server.xml.holder.VirusColorsHolder;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class VirusEntityImpl extends Entity {

@@ -7,7 +7,7 @@ import java.util.Set;
 import ru.calypso.ogar.server.entity.impl.MassEntityImpl;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class MassList {

@@ -35,7 +35,7 @@ import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdatePosition;
 import ru.calypso.ogar.server.util.Position;
 
 /**
- * @autor OgarProject, done by Calypso - Freya Project team
+ * @author OgarProject, done by Calypso - Freya Project team
  */
 
 public class PlayerTracker {

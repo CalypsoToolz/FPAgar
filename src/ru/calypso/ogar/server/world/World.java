@@ -39,7 +39,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * @autor OgarProject, done by Calypso - Freya Project team
+ * @author OgarProject, done by Calypso - Freya Project team
  */
 
 public class World {

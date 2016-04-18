@@ -40,7 +40,7 @@ import ru.calypso.ogar.server.util.BanList;
 import ru.calypso.ogar.server.util.Language;
 
 /**
- * @autor OgarProject, modify by Calypso - Freya Project team
+ * @author OgarProject, modify by Calypso - Freya Project team
  */
 
 public class Player {

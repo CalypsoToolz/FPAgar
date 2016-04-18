@@ -28,7 +28,7 @@ import ru.calypso.ogar.server.net.throwable.WrongDirectionException;
 import ru.calypso.ogar.server.world.Player;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class PacketOutUpdateLeaderboardFFA extends Packet {

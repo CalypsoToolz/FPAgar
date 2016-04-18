@@ -15,7 +15,7 @@ import ru.calypso.ogar.server.util.listeners.OnInitScriptListener;
 import ru.calypso.ogar.server.world.Player;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  * example player-EventHandler
  *
  */

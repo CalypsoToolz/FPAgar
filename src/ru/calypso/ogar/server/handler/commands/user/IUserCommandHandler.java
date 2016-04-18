@@ -3,7 +3,7 @@ package ru.calypso.ogar.server.handler.commands.user;
 import ru.calypso.ogar.server.world.Player;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public interface IUserCommandHandler

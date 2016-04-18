@@ -7,7 +7,7 @@ import ru.calypso.ogar.server.net.packet.Packet;
 import ru.calypso.ogar.server.world.Player;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class PacketChat extends Packet

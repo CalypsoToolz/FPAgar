@@ -6,7 +6,7 @@ import java.util.Map;
 import ru.calypso.ogar.server.util.holder.AbstractHolder;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class UserCommandHandler extends AbstractHolder

@@ -58,7 +58,7 @@ import ru.calypso.ogar.server.util.threads.ThreadPoolManager;
 import ru.calypso.ogar.server.world.Player;
 
 /**
- * @autor OgarProject, modify by Calypso - Freya Project team
+ * @author OgarProject, modify by Calypso - Freya Project team
  * TODO: protocolVersion & authToken not used, impl FB and Google auth
  */
 

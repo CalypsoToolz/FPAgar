@@ -45,7 +45,7 @@ import ru.calypso.ogar.server.net.packet.universal.PacketChat;
 import ru.calypso.ogar.server.net.packet.universal.PacketPing;
 
 /**
- * @autor OgarProject, modify by Calypso - Freya Project team
+ * @author OgarProject, modify by Calypso - Freya Project team
  */
 
 public class PacketRegistry {

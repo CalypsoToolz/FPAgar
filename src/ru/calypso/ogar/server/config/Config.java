@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import ru.calypso.ogar.server.util.ExProperties;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class Config

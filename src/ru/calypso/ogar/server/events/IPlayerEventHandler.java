@@ -5,7 +5,7 @@ import ru.calypso.ogar.server.events.player.PlayerDisconnectEvent;
 import ru.calypso.ogar.server.events.player.PlayerNameChangeEvent;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public abstract class IPlayerEventHandler

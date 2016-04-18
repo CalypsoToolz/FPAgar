@@ -3,7 +3,7 @@ package ru.calypso.ogar.server.util;
 import java.util.Random;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class Rnd

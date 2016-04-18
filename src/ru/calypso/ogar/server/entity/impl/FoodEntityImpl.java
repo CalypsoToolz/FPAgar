@@ -24,7 +24,7 @@ import ru.calypso.ogar.server.xml.holder.FoodColorsHolder;
 import ru.calypso.ogar.server.util.Position;
 
 /**
- * @autor OgarProject, done by Calypso - Freya Project team
+ * @author OgarProject, done by Calypso - Freya Project team
  */
 
 public class FoodEntityImpl extends Entity {

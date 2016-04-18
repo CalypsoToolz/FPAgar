@@ -55,7 +55,7 @@ import ru.calypso.ogar.server.world.Player;
 import ru.calypso.ogar.server.world.World;
 
 /**
- * @autor OgarProject, modify by Calypso - Freya Project team
+ * @author OgarProject, modify by Calypso - Freya Project team
  */
 
 public class OgarServer {

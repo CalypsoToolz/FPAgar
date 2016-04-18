@@ -31,7 +31,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 
 /**
- * @autor OgarProject, done by Calypso - Freya Project team
+ * @author OgarProject, done by Calypso - Freya Project team
  */
 
 @SuppressWarnings("rawtypes")

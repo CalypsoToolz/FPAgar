@@ -3,7 +3,7 @@ package ru.calypso.ogar.server.util;
 import ru.calypso.ogar.server.config.Config;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class PositionFixed {

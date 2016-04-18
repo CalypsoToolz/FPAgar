@@ -28,7 +28,7 @@ import ru.calypso.ogar.server.world.Player;
 import org.apache.log4j.Logger;
 
 /**
- * @autor OgarProject, modify by Calypso - Freya Project team
+ * @author OgarProject, modify by Calypso - Freya Project team
  */
 
 public class ClientHandler extends SimpleChannelInboundHandler<Packet> {

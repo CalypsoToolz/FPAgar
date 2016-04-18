@@ -25,7 +25,7 @@ import ru.calypso.ogar.server.util.PositionFixed;
 import ru.calypso.ogar.server.world.World;
 
 /**
- * @autor OgarProject, done by Calypso - Freya Project team
+ * @author OgarProject, done by Calypso - Freya Project team
  */
 
 public class MassEntityImpl extends Entity {

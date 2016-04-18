@@ -37,7 +37,7 @@ import ru.calypso.ogar.server.world.World;
 import ru.calypso.ogar.server.xml.holder.PlayerColorsHolder;
 
 /**
- * @autor OgarProject, done by Calypso - Freya Project team
+ * @author OgarProject, done by Calypso - Freya Project team
  */
 
 public class CellEntityImpl extends Entity {

@@ -7,7 +7,7 @@ import java.util.Set;
 import ru.calypso.ogar.server.entity.impl.VirusEntityImpl;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class VirusList

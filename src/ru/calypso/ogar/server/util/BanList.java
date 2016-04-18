@@ -12,7 +12,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class BanList

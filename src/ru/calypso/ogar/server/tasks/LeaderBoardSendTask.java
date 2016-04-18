@@ -5,7 +5,7 @@ import ru.calypso.ogar.server.net.packet.s2c.PacketOutUpdateLeaderboardFFA;
 import ru.calypso.ogar.server.util.threads.RunnableImpl;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class LeaderBoardSendTask extends RunnableImpl

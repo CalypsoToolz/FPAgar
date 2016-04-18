@@ -12,7 +12,7 @@ import ru.calypso.ogar.server.events.player.PlayerNameChangeEvent;
 import ru.calypso.ogar.server.util.holder.AbstractHolder;
 
 /**
- * @autor Calypso - Freya Project team
+ * @author Calypso - Freya Project team
  */
 
 public class PlayerEventHandler extends AbstractHolder
