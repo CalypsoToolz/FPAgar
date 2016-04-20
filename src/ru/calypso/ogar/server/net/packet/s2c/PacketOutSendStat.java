@@ -10,8 +10,8 @@ import ru.calypso.ogar.server.world.Player;
 /**
  * 
  * @author Calypso
- * Отправка статистики на клиент: аптайм, онлайн, рамер карты, размер еды
- * TODO: написать систему пинга "сервер-клиент-сервер" и добавить пинг в пакет
+ * Отправка статистики на клиент: аптайм, онлайн, рамер карты, размер еды, пинг, режим игры
+ * 
  */
 
 public class PacketOutSendStat extends Packet {
@@ -95,9 +95,7 @@ public class PacketOutSendStat extends Packet {
 		// ping
 		buf.writeDouble(player.getConnection().getPing());
 		
-		// gamemode TODO
-		// 0 - FFA, 1 - TEAMS, 2 - EXP (on my client)
-		buf.writeDouble(0);
+		buf.writeDouble(OgarServer.getInstance().getGameMode().getId());
 	}
 
 	@Override

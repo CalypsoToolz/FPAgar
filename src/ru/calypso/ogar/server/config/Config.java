@@ -28,7 +28,7 @@ public class Config
 		/** порт сервера */
 		public static int PORT;
 		/** макс допустимое кол-во подключенных клиентов */
-		public static int MAX_PLAYERS, LB_MAX_RESULTS;
+		public static int GAMEMODE_ID, MAX_PLAYERS, LB_MAX_RESULTS;
 		public static int AUTORESTART_DELAY;
 		public static String AMDIN_PASS;
 		public static String MODER_PASS;
@@ -117,6 +117,7 @@ public class Config
 	{
 		ExProperties config = load(SERVER_CFG);
 		Server.PORT = config.getProperty("ServerPort", 443);
+		Server.GAMEMODE_ID = config.getProperty("GameModeID", 0);
 		Server.MAX_PLAYERS = config.getProperty("MaxPlayers", 100);
 		Server.LB_SEND_INTERVAL = config.getProperty("LeaderBoardSendInterval", 1000L);
 		Server.LB_MAX_RESULTS = config.getProperty("LeaderBoardMaxPlayers", 10);

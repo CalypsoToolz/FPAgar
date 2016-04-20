@@ -63,7 +63,7 @@ public class World {
 
 	public Player getLargestPlayer()
 	{
-		return new PacketOutUpdateLeaderboardFFA(server).getPlayerAtIndex(0);		
+		return new PacketOutUpdateLeaderboardFFA().getPlayerAtIndex(0);		
 	}
 
     public Entity spawnEntity(EntityType type) {
@@ -111,6 +111,9 @@ public class World {
             default:
                 throw new IllegalArgumentException("Unsupported entity type: " + type);
         }
+
+        if(!(entity instanceof CellEntityImpl))
+        	server.getGameMode().onEntitySpawn(entity);
 
         writeLock.lock();
 		try

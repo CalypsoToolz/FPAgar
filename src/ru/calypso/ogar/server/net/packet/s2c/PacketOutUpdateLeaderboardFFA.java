@@ -34,10 +34,9 @@ import ru.calypso.ogar.server.world.Player;
 public class PacketOutUpdateLeaderboardFFA extends Packet {
 
 	private List<Player> allParticates = new ArrayList<Player>();
-    private final OgarServer server;
+    private final OgarServer server = OgarServer.getInstance();
 
-    public PacketOutUpdateLeaderboardFFA(OgarServer server) {
-        this.server = server;
+    public PacketOutUpdateLeaderboardFFA() {
     	prepare();
     }
 
@@ -66,10 +65,18 @@ public class PacketOutUpdateLeaderboardFFA extends Packet {
     	else
     		buf.writeInt(allParticates.size());
 
-    	for(int i = 0; i < Config.Server.LB_MAX_RESULTS && i < allParticates.size(); i++)
+    	if(getSize() == 0)
     	{
-   		 	buf.writeInt(allParticates.get(i).getCellIdAt(0));
-   		 	writeUTF16(buf, allParticates.get(i).getName());
+    		buf.writeInt(0);
+   		 	writeUTF16(buf, "");
+    	}
+    	else
+    	{
+	    	for(int i = 0; i < Config.Server.LB_MAX_RESULTS && i < allParticates.size(); i++)
+	    	{
+	   		 	buf.writeInt(allParticates.get(i).getCellIdAt(0));
+	   		 	writeUTF16(buf, allParticates.get(i).getName());
+	    	}
     	}
     }
 

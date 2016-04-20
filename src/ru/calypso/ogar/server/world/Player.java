@@ -31,6 +31,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import com.google.common.collect.ImmutableList;
 
 import io.netty.channel.Channel;
+import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.entity.impl.CellEntityImpl;
 import ru.calypso.ogar.server.net.PlayerConnection;
 import ru.calypso.ogar.server.net.packet.Packet;
@@ -123,11 +124,13 @@ public class Player {
     	finally{
     		cellWrite.unlock();
     	}
+    	OgarServer.getInstance().getGameMode().onCellAdd(this, cell);
         playerConnection.sendPacket(new PacketOutAddNode(cell.getID()));
     }
 
     public void removeCell(CellEntityImpl cell) {
     	removeCell(cell.getID());
+    	OgarServer.getInstance().getGameMode().onCellRemove(this, cell);
     	tracker.updateNodes(true);
     }
 

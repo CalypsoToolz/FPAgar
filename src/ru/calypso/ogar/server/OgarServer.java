@@ -30,6 +30,8 @@ import org.apache.log4j.Logger;
 import ru.calypso.ogar.server.config.Config;
 import ru.calypso.ogar.server.entity.Entity;
 import ru.calypso.ogar.server.events.PlayerEventHandler;
+import ru.calypso.ogar.server.gamemode.GameMode;
+import ru.calypso.ogar.server.gamemode.GameModesHolder;
 import ru.calypso.ogar.server.handler.commands.admin.AdminCommandHandler;
 import ru.calypso.ogar.server.handler.commands.user.UserCommandHandler;
 import ru.calypso.ogar.server.holders.FoodList;
@@ -70,6 +72,7 @@ public class OgarServer {
     private int tickThreads = Integer.getInteger("tickThreads", 1); // TODO learn about this
     private NetworkManager networkManager;
     private World world;
+    private GameMode gamemode;
     private long tick = 0, startTime;
 
     public static void main(String[] args) throws Throwable {
@@ -102,6 +105,14 @@ public class OgarServer {
 
     public World getWorld() {
         return world;
+    }
+
+    public GameMode getGameMode() {
+        return gamemode;
+    }
+
+    public void setGameMode(GameMode mode) {
+        gamemode = mode;
     }
 
     public long getTick() {
@@ -144,14 +155,23 @@ public class OgarServer {
         // проверяем порт на доступность, если занят, то ждем пока не освободится
         checkPort();
         world = new World(this);
-        
         _log.info("=[Scripts]=======================================");
         ScriptsLoader.getInstance().init();
+        GameModesHolder.getInstance().log();
+        gamemode = GameModesHolder.getInstance().getGameModeByID(Config.Server.GAMEMODE_ID);
+        if(gamemode == null)
+        {
+        	_log.warn("Current GameMode is NULL! Check configs! And restart server!");
+        	try {
+				Thread.sleep(10000L);
+				System.exit(0);
+			} catch (InterruptedException e2) {
+			}
+        }
         UserCommandHandler.getInstance().log();
         AdminCommandHandler.getInstance().log();
         PlayerEventHandler.getInstance().log();
 		_log.info("=================================================");
-        
 		_log.info("=[Ban list]======================================");
 		BanList.loadBanList();
 		_log.info("=================================================");
@@ -181,7 +201,7 @@ public class OgarServer {
         }
 
 		// запускаем таск на отправку leaderboard
-		ThreadPoolManager.getInstance().scheduleAtFixedDelay(new LeaderBoardSendTask(this), Config.Server.LB_SEND_INTERVAL, Config.Server.LB_SEND_INTERVAL);
+		ThreadPoolManager.getInstance().scheduleAtFixedDelay(new LeaderBoardSendTask(), Config.Server.LB_SEND_INTERVAL, Config.Server.LB_SEND_INTERVAL);
 		// запускаем таск на отправку статистики
 		if(Config.Other.STAT_SEND_DELAY > 0L)
 			ThreadPoolManager.getInstance().scheduleAtFixedDelay(new StatSendTask(), Config.Other.STAT_SEND_DELAY, Config.Other.STAT_SEND_DELAY);
@@ -197,6 +217,7 @@ public class OgarServer {
         // Start the tick workers
         tickWorkers.forEach(TickWorker::start);
         _log.info("Server loaded at " + (int) (System.currentTimeMillis() - startTime) / 1000 % 60 + " seconds!\n");
+        _log.info("Current GameMode: " + gamemode.getName());
         if(Config.Server.AUTORESTART_DELAY > 0)
         	Shutdown.getInstance().schedule(Config.Server.AUTORESTART_DELAY, Shutdown.RESTART);
         if(Config.Server.INFO_PRINT_TASK_DELAY > 0)

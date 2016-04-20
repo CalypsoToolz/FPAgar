@@ -25,11 +25,10 @@ import ru.calypso.ogar.server.OgarServer;
 import ru.calypso.ogar.server.config.Config;
 import ru.calypso.ogar.server.entity.Entity;
 import ru.calypso.ogar.server.entity.EntityType;
-import ru.calypso.ogar.server.net.PlayerConnection.MousePosition;
+import ru.calypso.ogar.server.gamemode.GameMode;
 import ru.calypso.ogar.server.tasks.MassDecayTask;
 import ru.calypso.ogar.server.util.MathHelper;
 import ru.calypso.ogar.server.util.Position;
-import ru.calypso.ogar.server.util.PositionFixed;
 import ru.calypso.ogar.server.util.move.MoveEngine;
 import ru.calypso.ogar.server.util.threads.ThreadPoolManager;
 import ru.calypso.ogar.server.world.Player;
@@ -101,6 +100,11 @@ public class CellEntityImpl extends Entity {
     	wPressed = pressed;
     }
 
+    public boolean isWPressed()
+    {
+    	return wPressed;
+    }
+
     public long getRecombineTicks() {
         return recombineTicks;
     }
@@ -115,165 +119,16 @@ public class CellEntityImpl extends Entity {
     		return;
         if (recombineTicks > 0)
             recombineTicks--;
-        split();
-        feed();
+        
+    	GameMode gMode = OgarServer.getInstance().getGameMode();
+        gMode.trySplit(owner, this);
+        gMode.tryFeed(owner, this);
         if (getMoveEngineTicks() > 0)
     		getMoveEngine().handleMove();
-        move();
-        eat();
+        gMode.onMouseMove(owner, this);
+        gMode.tryEat(owner, this);
         if(collisionRestoreTicks > 0)
         	collisionRestoreTicks--;
-    }
-
-    private boolean feed()
-    {
-    	if(!wPressed)
-    		return false;
-    	setWPressed(false);
-
-    	if(this.getMass() < Config.Player.MIN_MASS_EJECT || this.getMass() < Config.Player.MASS_EJECT_LOST)
-    		return false;
-    	MousePosition mouse = owner.getConnection().getGlobalMousePosition();
-
-    	double deltaX = mouse.getX() - this.getX();
-        double deltaY = mouse.getY() - this.getY();
-        double angle = Math.atan2(deltaX, deltaY);
-        
-        int size = this.getPhysicalSize();
-		Position startPos = new Position(
-				this.getX() + size * Math.sin(angle),
-				this.getY() + size * Math.cos(angle));
-		this.setMass(this.getMass() - Config.Player.MASS_EJECT_LOST);
-		if(Config.Mass.RANDOM_ANGLE)
-			angle += (Math.random() * .4) - .2;
-		
-        MassEntityImpl massCell = (MassEntityImpl) OgarServer.getInstance().getWorld().spawnEntity(EntityType.MASS, startPos);
-        massCell.setColor(this.getColor());
-        massCell.setMass(Config.Mass.MASS);
-        OgarServer.getInstance().getWorld().forceUpdateEntities();
-        massCell.setCellSpawner(this.getID());
-        massCell.setMoveAngle(angle);
-        massCell.setMoveEngine(new MoveEngine(massCell, Config.Mass.START_SPEED, Config.Mass.MOVE_TICKS_COUNT, Config.Mass.SPEED_DECAY_RATE));
-        return true;
-    }
-
-    private boolean split()
-    {
-    	if(!spacePressed)
-    		return false;
-    	setSpacePressed(false);
-    	if(markAsEated)
-    		return false;
-    	if(owner == null)
-    		return false;
-    	if(owner.getCells().size() >= Config.Player.MAX_CELLS)
-    		return false;
-    	if(this.getMass() < Config.Player.MIN_MASS_SPLIT)
-    		return false;
-    	MousePosition mouse = getOwner().getConnection().getGlobalMousePosition();
-    	if(mouse == null)
-    		return false;
-    	// расчитываем угол
-    	double deltaX = mouse.getX() - this.getX();
-        double deltaY = mouse.getY() - this.getY();
-        double angle = Math.atan2(deltaX, deltaY);
-
-        int newMass = this.getMass() / 2;
-
-        CellEntityImpl newCell = OgarServer.getInstance().getWorld().spawnPlayerCell(owner, this.getPosition());
-        double mult = 3 + Math.log(1 + newMass) / 10;
-        double speed = 30.0D * Math.min(Math.pow(mass, -Math.PI / 9.869604401089358 / 10) * mult, 150);
-
-        newCell.setMoveAngle(angle);
-        newCell.setMoveEngine(new MoveEngine(newCell, speed, 24, 0.87));
-        calcRecombineTicks();
-
-        newCell.setMass(newMass);
-        OgarServer.getInstance().getWorld().forceUpdateEntities();
-
-        newCell.setCollisionRestoreTicks(12);
-        setCollisionRestoreTicks(12);
-        newCell.calcRecombineTicks();
-        
-        setMass(newMass);
-        owner.addCell(newCell);
-        return true;
-    }
-
-    private void move() {    	
-        int r = getPhysicalSize();
-
-        MousePosition mouse = getOwner().getConnection().getGlobalMousePosition();
-        if (mouse == null)
-        	return;
-
-     // Get angle
-        double deltaX = mouse.getX() - getX();
-        double deltaY = mouse.getY() - getY();
-        double angle = Math.atan2(deltaX, deltaY);
-
-        if (Double.isNaN(angle)) {
-            return;
-        }
-
-        // Distance between mouse pointer and cell
-        double distance = position.distance(mouse.getX(), mouse.getY());
-        double speed = Math.min(getSpeed(), distance);
-
-        double x1 = getX() + (speed * Math.sin(angle));
-        double y1 = getY() + (speed * Math.cos(angle));
-
-        // Collision check for the owner's other cells
-        for (CellEntityImpl other : owner.getCells()) {
-            if (other.equals(this))
-                continue;
-
-            if (other.isIgnoreCollision() || isIgnoreCollision())
-				continue;
-
-			if ((other.getRecombineTicks() > 0) || (this.getRecombineTicks() > 0)) {
-				double collisionDist = other.getPhysicalSize() + r;
-				if (!simpleCollide(other, collisionDist))
-					continue;
-				distance = position.distance(other.getPosition());
-
-				if (distance < collisionDist) {
-					double newDeltaX = other.getPosition().getX() - x1;
-					double newDeltaY = other.getPosition().getY() - y1;
-					double newAngle = Math.atan2(newDeltaX, newDeltaY);
-					double move = collisionDist - distance + 5.0D;
-					other.setPosition(other.getPosition().add(move * Math.sin(newAngle), move * Math.cos(newAngle)));
-				}
-			}
-        }
-
-        // TODO: Fire a move event here
-        PositionFixed fixed = PositionFixed.byRadius(x1, y1, r);
-        if(getMoveEngineTicks() == 0)
-        	setMoveAngle(angle);
-        setPosition(new Position(fixed.x, fixed.y));
-    }
- 
-    private void eat() {
-        List<Entity> edibles = getNearbyEntity();        
-        for (Entity entity : edibles) {
-            if(entity.getType() == EntityType.CELL)
-            	entity.setIsMarkAsEated(true);
-            
-            else if(entity.getType() == EntityType.MASS)
-            {
-            	MassEntityImpl mass = (MassEntityImpl)entity;
-            	// не хаваем только выплюнутую массу
-            	if(mass.getCellSpawner() == getID() && mass.getMoveEngineTicks() >= Config.Mass.MOVE_TICKS_COUNT - 1)
-            		continue;
-            }
-            else if(entity.getType() == EntityType.VIRUS)
-            	spikeCellByVirus((VirusEntityImpl) entity);
-            
-            if(entity.getType() != EntityType.VIRUS)
-            	this.addMass(entity.getMass());
-            entity.kill(getID());
-        }
     }
 
 	public List<Entity> getNearbyEntity() {
@@ -433,7 +288,7 @@ public class CellEntityImpl extends Entity {
         	decayTask.cancel(true);
     }
 
-    private boolean simpleCollide(CellEntityImpl other, double collisionDist) {
+    public boolean simpleCollide(CellEntityImpl other, double collisionDist) {
         return MathHelper.fastAbs(getX() - other.getX()) < (2 * collisionDist) && MathHelper.fastAbs(getY() - other.getY()) < (2 * collisionDist);
     }
 }
